@@ -3,7 +3,7 @@ from mrjob.job import MRJob
 from queue import PriorityQueue
 
 
-class MostEclectic(MRJob):
+class MostFormulaic(MRJob):
     '''
     This is based on taking distances between songs with distance correlation,
     which should be bounded between [0,1], with values closer to 0 indicating
@@ -34,20 +34,20 @@ class MostEclectic(MRJob):
         dist = np.mean([x for x in mean_dist])
 
         if len(self.distances) < 10:
-            self.distances.append(-dist)
-            self.songqueue.put(tuple((-dist,songIDX)))
-        elif -dist > min(self.distances) and len(self.distances) == 10:
+            self.distances.append(dist)
+            self.songqueue.put(tuple((dist,songIDX)))
+        elif dist > min(self.distances) and len(self.distances) == 10:
             self.distances.remove(min(self.distances))
-            self.distances.append(-dist)
+            self.distances.append(dist)
             _ = self.songqueue.get()
-            self.songqueue.put(tuple((-dist,songIDX)))
+            self.songqueue.put(tuple((dist,songIDX)))
 
 
     def reducer_final(self):
         while not self.songqueue.empty():
             distance, songIDX = self.songqueue.get()
-            yield songIDX, -distance
+            yield songIDX, distance
 
 
 if __name__ == '__main__':
-    MostEclectic.run()
+    MostFormulaic.run()
