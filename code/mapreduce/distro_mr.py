@@ -2,7 +2,6 @@ import numpy as np
 from mrjob.job import MRJob
 from scipy.stats import skew as skew
 
-#[9974, 9989]	0.6337054765985277
 
 
 class Distribution(MRJob):
