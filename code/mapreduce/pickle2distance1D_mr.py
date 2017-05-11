@@ -1,10 +1,10 @@
+import pickle
 import tables
 import numpy as np
 from mrjob.job import MRJob
 from scipy.spatial.distance import correlation as dc
 
-#Need to change path once it is known for the remote machine
-PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
+DICTO = pickle.load(open('catalog.pkl', 'rb' ))
 
 
 class SongDist(MRJob):
@@ -12,52 +12,19 @@ class SongDist(MRJob):
     '''
 
     def mapper(self, _, line):
-        fields = line.split(',')
-        idxA, idxB = fields[0], fields[2]
-        lpathA, lpathB = fields[1], fields[3]
+        fields = line.strip('[]').split(',')
+        idxA, idxB = int(fields[0]), int(fields[1])
 
-        idx_pair = [int(idxA),int(idxB)]
+        songA = DICTO[idxA]
+        songB = DICTO[idxB]
 
-        songA = self.build_song(lpathA)
-        songB = self.build_song(lpathB)
+        idx_pair = [idxA,idxB]
 
         dist = self.pairwise_comparison(songA, songB)
 
         yield idx_pair, dist
 
 
-    def build_song(self, lpath):
-        '''
-        Code for getters adapted from:
-        https://raw.githubusercontent.com/tbertinmahieux/MSongsDB/master/PythonSrc/hdf5_getters.py
-        '''
-
-        fname = PATH + lpath
-
-        song = []
-        d = {}
-
-        obj = tables.open_file(fname, mode='r')
-
-        # Musical characteristics, 0-10
-        d['sampleRate'] = np.array(obj.root.analysis.songs.cols.analysis_sample_rate[0])
-        d['length'] = np.array(obj.root.analysis.songs.cols.duration[0])
-        d['key'] = np.array(obj.root.analysis.songs.cols.key[0])
-        d['loud'] = np.array(obj.root.analysis.songs.cols.loudness[0])
-        d['tempo'] = np.array(obj.root.analysis.songs.cols.tempo[0])
-        d['timeSignature'] = np.array(obj.root.analysis.songs.cols.time_signature[0])
-        d['segLoudMax'] = obj.root.analysis.segments_loudness_max[obj.root.analysis.songs.cols.idx_segments_loudness_max[0]:]
-        d['segLoudMaxTime'] = obj.root.analysis.segments_loudness_max_time[obj.root.analysis.songs.cols.idx_segments_loudness_max_time[0]:]
-        d['segPitches'] = obj.root.analysis.segments_pitches[obj.root.analysis.songs.cols.idx_segments_pitches[0]:]
-        d['segStart'] = obj.root.analysis.segments_start[obj.root.analysis.songs.cols.idx_segments_start[0]:]
-        d['segTimbre'] = obj.root.analysis.segments_timbre[obj.root.analysis.songs.cols.idx_segments_timbre[0]:]
-
-        obj.close()
-
-        for key, value in d.items():
-            song.append(value)
-
-        return song
 
 
     def pad_array(self, array,newlen):
@@ -104,9 +71,10 @@ class SongDist(MRJob):
                 for i in range(-5,0):
                     songA[i] = self.pad_array(songA[i],max_len)
 
-        dist = self.distance(songA,songB)
+        dist = self.distance(songA[5:],songB[5:])
 
         return dist
+
 
     def flat(self, array_list):
         '''
@@ -135,6 +103,7 @@ class SongDist(MRJob):
 
         except:
             print('Couldn\'t take distance for some reason')
+
 
 
 if __name__ == '__main__':
