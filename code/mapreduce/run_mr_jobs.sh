@@ -6,7 +6,7 @@
 
 
 # Uses the script that unpickles the catalog to compute pairwise distances
-python3 pickle2distance1D_mr.py mapreduce.job.reduces=1 pairsIDX_trimmed.csv > temp_distances.tsv
+#python3 pickle2distance1D_mr.py mapreduce.job.reduces=1 pairsIDX_trimmed.csv > temp_distances.tsv
 
 # Characteristics for individual distributions (per song)
 python3 distro_mr.py mapreduce.job.reduces=1 temp_distances.tsv > temp_distributions.tsv
@@ -24,9 +24,10 @@ python3 most_formulaic_mr.py mapreduce.job.reduces=1 temp_distributions.tsv > te
 
 
 # Finds the two most similar songs in the dataset
-
+python3 most_similar_mr.py mapreduce.job.reduces=1 temp_distances.tsv > temp_most_similar.tsv
 
 
 
 
 # Finds the two most dissimilar songs in the dataset
+#python3 least_similar_mr.py mapreduce.job.reduces=1 temp_distances.tsv > temp_least_similar.tsv

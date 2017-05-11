@@ -1,4 +1,3 @@
-import numpy as np
 from mrjob.job import MRJob
 from queue import PriorityQueue
 
@@ -31,7 +30,7 @@ class MostEclectic(MRJob):
         '''
         '''
 
-        dist = np.mean([x for x in mean_dist])
+        dist = list(mean_dist)[0]
 
         if len(self.distances) < 10:
             self.distances.append(-dist)
