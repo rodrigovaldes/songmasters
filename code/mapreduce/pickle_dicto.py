@@ -32,47 +32,50 @@ def build_song(fname_tuple):
     songIDX, fname = fname_tuple
 
     #song = []
-    d = {}
+    labels, features = {}, {}
 
     obj = tables.open_file(fname, mode='r')
 
     # Labels, 0-4
-    d['aName'] = str(obj.root.metadata.songs.cols.artist_name[0])[2:-1]
-    d['aID'] = str(obj.root.metadata.songs.cols.artist_id[0])[2:-1]
-    d['sName'] = str(obj.root.metadata.songs.cols.title[0])[2:-1]
-    d['sID'] = str(obj.root.metadata.songs.cols.song_id[0])[2:-1]
+    labels['aName'] = str(obj.root.metadata.songs.cols.artist_name[0])[2:-1]
+    labels['aID'] = str(obj.root.metadata.songs.cols.artist_id[0])[2:-1]
+    labels['sName'] = str(obj.root.metadata.songs.cols.title[0])[2:-1]
+    labels['sID'] = str(obj.root.metadata.songs.cols.song_id[0])[2:-1]
 
     terms = obj.root.metadata.artist_terms[obj.root.metadata.songs.cols.idx_artist_terms[0]:]
 
-    d['aTerms'] = []
+    labels['aTerms'] = []
 
     for term in terms:
         clean_term = str(term)[2:-1]
-        d['aTerms'].append(clean_term)
+        labels['aTerms'].append(clean_term)
+
+    labels['features'] = []
 
     # Musical characteristics, 5-15
-    d['sampleRate'] = np.array(obj.root.analysis.songs.cols.analysis_sample_rate[0])
-    d['length'] = np.array(obj.root.analysis.songs.cols.duration[0])
-    d['key'] = np.array(obj.root.analysis.songs.cols.key[0])
-    d['loud'] = np.array(obj.root.analysis.songs.cols.loudness[0])
-    d['tempo'] = np.array(obj.root.analysis.songs.cols.tempo[0])
-    d['timeSignature'] = np.array(obj.root.analysis.songs.cols.time_signature[0])
-    d['segLoudMax'] = obj.root.analysis.segments_loudness_max[obj.root.analysis.songs.cols.idx_segments_loudness_max[0]:]
-    d['segLoudMaxTime'] = obj.root.analysis.segments_loudness_max_time[obj.root.analysis.songs.cols.idx_segments_loudness_max_time[0]:]
-    d['segPitches'] = obj.root.analysis.segments_pitches[obj.root.analysis.songs.cols.idx_segments_pitches[0]:]
-    d['segStart'] = obj.root.analysis.segments_start[obj.root.analysis.songs.cols.idx_segments_start[0]:]
-    d['segTimbre'] = obj.root.analysis.segments_timbre[obj.root.analysis.songs.cols.idx_segments_timbre[0]:]
+    features['sampleRate'] = np.array(obj.root.analysis.songs.cols.analysis_sample_rate[0])
+    features['length'] = np.array(obj.root.analysis.songs.cols.duration[0])
+    features['key'] = np.array(obj.root.analysis.songs.cols.key[0])
+    features['loud'] = np.array(obj.root.analysis.songs.cols.loudness[0])
+    features['tempo'] = np.array(obj.root.analysis.songs.cols.tempo[0])
+    features['timeSignature'] = np.array(obj.root.analysis.songs.cols.time_signature[0])
+    features['segLoudMax'] = obj.root.analysis.segments_loudness_max[obj.root.analysis.songs.cols.idx_segments_loudness_max[0]:]
+    features['segLoudMaxTime'] = obj.root.analysis.segments_loudness_max_time[obj.root.analysis.songs.cols.idx_segments_loudness_max_time[0]:]
+    features['segPitches'] = obj.root.analysis.segments_pitches[obj.root.analysis.songs.cols.idx_segments_pitches[0]:]
+    features['segStart'] = obj.root.analysis.segments_start[obj.root.analysis.songs.cols.idx_segments_start[0]:]
+    features['segTimbre'] = obj.root.analysis.segments_timbre[obj.root.analysis.songs.cols.idx_segments_timbre[0]:]
 
     obj.close()
 
-    '''
-    for value in d.values():
-        song.append(value)
 
+    for value in features.values():
+        labels['features'].append(value)
+
+    '''
     return song
     '''
 
-    return tuple((songIDX, d))
+    return tuple((songIDX, labels))
 
 
 def build_catalog(songlist):

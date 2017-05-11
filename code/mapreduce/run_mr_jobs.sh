@@ -6,7 +6,7 @@
 
 
 # Uses the script that unpickles the catalog to compute pairwise distances
-#python3 pickle2distance1D_mr.py mapreduce.job.reduces=1 pairsIDX_trimmed.csv > temp_distances.tsv
+python3 pickle2distance1D_mr.py mapreduce.job.reduces=1 pairsIDX_trimmed.csv > temp_distances.tsv
 
 # Characteristics for individual distributions (per song)
 python3 distro_mr.py mapreduce.job.reduces=1 temp_distances.tsv > temp_distributions.tsv

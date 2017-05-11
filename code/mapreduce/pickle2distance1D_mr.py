@@ -15,8 +15,8 @@ class SongDist(MRJob):
         fields = line.strip('[]').split(',')
         idxA, idxB = int(fields[0]), int(fields[1])
 
-        songA = DICTO[idxA]
-        songB = DICTO[idxB]
+        songA = DICTO[idxA]['features']
+        songB = DICTO[idxB]['features']
 
         idx_pair = [idxA,idxB]
 
