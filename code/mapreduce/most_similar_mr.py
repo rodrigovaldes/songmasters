@@ -1,8 +1,9 @@
 from mrjob.job import MRJob
 
 
-# This script yields TWO pairs of dissimilar songs.  Not sure what the problem
-# is.
+# This script yields TWO pairs of similar songs.  Not sure what the problem is.
+#
+# Seems to create two reducer_inits but I don't understand why.
 
 class MostSimilar(MRJob):
     '''
@@ -21,8 +22,10 @@ class MostSimilar(MRJob):
 
 
     def reducer_init(self):
+        print('\n\nIn reducer_init')
         self.pairIDX = None
         self.distance = 0.0
+        self.i = 0
 
 
     def reducer(self, pair, dist):
@@ -32,11 +35,18 @@ class MostSimilar(MRJob):
         distance = list(dist)[0]
 
         if distance > self.distance:
+            print('\n\nIn reducer, inside if-statement')
+            print('\tself.i = {}'.format(self.i))
+            print('\tdistance = {}; self.distance = {}'.format(distance,self.distance))
+            print('\tpair = {}; self.pairIDX = {}'.format(pair,self.pairIDX))
             self.distance = distance
             self.pairIDX = pair
 
+        self.i += 1
+
 
     def reducer_final(self):
+        print('\n\nIn reducer_final')
         pairIDX = self.pairIDX.strip('[]').split(',')
         pairIDX = [int(x) for x in pairIDX]
         yield pairIDX, self.distance

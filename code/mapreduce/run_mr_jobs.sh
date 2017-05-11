@@ -24,10 +24,11 @@ python3 most_formulaic_mr.py mapreduce.job.reduces=1 temp_distributions.tsv > te
 
 
 # Finds the two most similar songs in the dataset
+# Is returning two pairs of similar songs at present
 python3 most_similar_mr.py mapreduce.job.reduces=1 temp_distances.tsv > temp_most_similar.tsv
 
 
 
-
+# Haven't written this last script yet
 # Finds the two most dissimilar songs in the dataset
 #python3 least_similar_mr.py mapreduce.job.reduces=1 temp_distances.tsv > temp_least_similar.tsv
