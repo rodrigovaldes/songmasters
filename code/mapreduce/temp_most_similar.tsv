@@ -1,5 +1,4 @@
 [9554, 9968]	1.3113404532170625
-[9762, 9797]	1.271009730584258
 
 
 In reducer_init
@@ -69,84 +68,6 @@ In reducer, inside if-statement
 	self.i = 1178
 	distance = 1.3113404532170625; self.distance = 1.2671252556140409
 	pair = [9554, 9968]; self.pairIDX = [9554, 9797]
-
-
-In reducer_final
-
-
-In reducer_init
-
-
-In reducer, inside if-statement
-	self.i = 0
-	distance = 0.9029518012403971; self.distance = 0.0
-	pair = [9683, 9768]; self.pairIDX = None
-
-
-In reducer, inside if-statement
-	self.i = 10
-	distance = 0.965756612269992; self.distance = 0.9029518012403971
-	pair = [9683, 9778]; self.pairIDX = [9683, 9768]
-
-
-In reducer, inside if-statement
-	self.i = 99
-	distance = 0.991546632701718; self.distance = 0.965756612269992
-	pair = [9683, 9867]; self.pairIDX = [9683, 9778]
-
-
-In reducer, inside if-statement
-	self.i = 151
-	distance = 0.993944284852726; self.distance = 0.991546632701718
-	pair = [9683, 9919]; self.pairIDX = [9683, 9867]
-
-
-In reducer, inside if-statement
-	self.i = 259
-	distance = 1.002696231348483; self.distance = 0.993944284852726
-	pair = [9684, 9712]; self.pairIDX = [9683, 9919]
-
-
-In reducer, inside if-statement
-	self.i = 267
-	distance = 1.0071066121554817; self.distance = 1.002696231348483
-	pair = [9684, 9720]; self.pairIDX = [9684, 9712]
-
-
-In reducer, inside if-statement
-	self.i = 309
-	distance = 1.1308289044881772; self.distance = 1.0071066121554817
-	pair = [9684, 9762]; self.pairIDX = [9684, 9720]
-
-
-In reducer, inside if-statement
-	self.i = 1283
-	distance = 1.167582979107537; self.distance = 1.1308289044881772
-	pair = [9687, 9797]; self.pairIDX = [9684, 9762]
-
-
-In reducer, inside if-statement
-	self.i = 11090
-	distance = 1.1748405179493255; self.distance = 1.167582979107537
-	pair = [9720, 9869]; self.pairIDX = [9687, 9797]
-
-
-In reducer, inside if-statement
-	self.i = 11163
-	distance = 1.192593909945067; self.distance = 1.1748405179493255
-	pair = [9720, 9942]; self.pairIDX = [9720, 9869]
-
-
-In reducer, inside if-statement
-	self.i = 11164
-	distance = 1.237113930406708; self.distance = 1.192593909945067
-	pair = [9720, 9943]; self.pairIDX = [9720, 9942]
-
-
-In reducer, inside if-statement
-	self.i = 21833
-	distance = 1.271009730584258; self.distance = 1.237113930406708
-	pair = [9762, 9797]; self.pairIDX = [9720, 9943]
 
 
 In reducer_final

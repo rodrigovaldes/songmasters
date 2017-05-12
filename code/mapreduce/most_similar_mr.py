@@ -1,10 +1,6 @@
 from mrjob.job import MRJob
 
 
-# This script yields TWO pairs of similar songs.  Not sure what the problem is.
-#
-# Seems to create two reducer_inits but I don't understand why.
-
 class MostSimilar(MRJob):
     '''
     This is based on taking distances between songs with distance correlation,
@@ -22,7 +18,6 @@ class MostSimilar(MRJob):
 
 
     def reducer_init(self):
-        print('\n\nIn reducer_init')
         self.pairIDX = None
         self.distance = 0.0
         self.i = 0
@@ -35,10 +30,6 @@ class MostSimilar(MRJob):
         distance = list(dist)[0]
 
         if distance > self.distance:
-            print('\n\nIn reducer, inside if-statement')
-            print('\tself.i = {}'.format(self.i))
-            print('\tdistance = {}; self.distance = {}'.format(distance,self.distance))
-            print('\tpair = {}; self.pairIDX = {}'.format(pair,self.pairIDX))
             self.distance = distance
             self.pairIDX = pair
 
@@ -46,7 +37,6 @@ class MostSimilar(MRJob):
 
 
     def reducer_final(self):
-        print('\n\nIn reducer_final')
         pairIDX = self.pairIDX.strip('[]').split(',')
         pairIDX = [int(x) for x in pairIDX]
         yield pairIDX, self.distance
