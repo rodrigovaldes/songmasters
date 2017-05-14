@@ -20,7 +20,6 @@ class MostSimilar(MRJob):
     def reducer_init(self):
         self.pairIDX = None
         self.distance = 0.0
-        self.i = 0
 
 
     def reducer(self, pair, dist):
@@ -32,9 +31,6 @@ class MostSimilar(MRJob):
         if distance > self.distance:
             self.distance = distance
             self.pairIDX = pair
-
-        self.i += 1
-
 
     def reducer_final(self):
         pairIDX = self.pairIDX.strip('[]').split(',')
