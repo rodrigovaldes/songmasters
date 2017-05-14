@@ -7,6 +7,8 @@ import multiprocessing as mp
 
 #Change this once the remote path is known
 PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
+# PATH = '/Users/ruy/Documents/UChicago/spring2017/cs123/song_data/MillionSongSubset/data/'
+
 
 def build_filelist():
     '''
@@ -50,7 +52,7 @@ def build_song(fname_tuple):
         clean_term = str(term)[2:-1]
         labels['aTerms'].append(clean_term)
 
-    labels['features'] = []
+    # labels['features'] = []
 
     # Musical characteristics, 5-15
     features['sampleRate'] = np.array(obj.root.analysis.songs.cols.analysis_sample_rate[0])
@@ -68,8 +70,10 @@ def build_song(fname_tuple):
     obj.close()
 
 
-    for value in features.values():
-        labels['features'].append(value)
+    # for value in features.values():
+    #     labels['features'].append(value)
+
+    labels['features'] = features
 
     '''
     return song

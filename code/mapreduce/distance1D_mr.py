@@ -5,6 +5,8 @@ from scipy.spatial.distance import correlation as dc
 
 #Need to change path once it is known for the remote machine
 PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
+#PATH = '/Users/ruy/Documents/UChicago/spring2017/cs123/song_data/MillionSongSubset/data/'
+
 
 
 class SongDist(MRJob):

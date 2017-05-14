@@ -4,6 +4,8 @@ import numpy as np
 from mrjob.job import MRJob
 from scipy.spatial.distance import correlation as dc
 
+from operator import itemgetter
+
 DICTO = pickle.load(open('catalog.pkl', 'rb' ))
 
 
@@ -12,14 +14,12 @@ class SongDist(MRJob):
     '''
 
     def mapper(self, _, line):
+
         fields = line.strip('[]').split(',')
         idxA, idxB = int(fields[0]), int(fields[1])
-
         songA = DICTO[idxA]['features']
         songB = DICTO[idxB]['features']
-
         idx_pair = [idxA,idxB]
-
         dist = self.pairwise_comparison(songA, songB)
 
         yield idx_pair, dist
@@ -57,23 +57,29 @@ class SongDist(MRJob):
         '''
         '''
 
-        songA_segs = len(songA[-1])
-        songB_segs = len(songB[-1])
+        songA_segs = len(songA["segTimbre"])
+        songB_segs = len(songB["segTimbre"])
 
         if songA_segs != songB_segs:
             max_len = max(songA_segs, songB_segs)
             if max_len == songA_segs:
                 #Pad arrays for songB
-                for i in range(-5,0):
+                # THIS IS WRONG, NEED TO CHANGE DIC TO LIST from Pickle
+                for i in ['segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre']:
                     songB[i] = self.pad_array(songB[i],max_len)
             else:
                 #Pad arrays for songA
-                for i in range(-5,0):
+                # THIS IS WRONG, NEED TO CHANGE DIC TO LIST from Pickle
+                for i in ['segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre']:
                     songA[i] = self.pad_array(songA[i],max_len)
 
-        dist = self.distance(songA[5:],songB[5:])
+        songA = list(itemgetter('segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre')(songA))
+        songB = list(itemgetter('segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre')(songB))
+
+        dist = self.distance(songA, songB)
 
         return dist
+        # return "one"
 
 
     def flat(self, array_list):
