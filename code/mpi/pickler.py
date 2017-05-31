@@ -16,19 +16,6 @@ OUTPUT_DIR = 'pickles'
 #Change this once the remote path is known
 PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
 
-def build_filelist():
-    '''
-    '''
-    fname_list = []
-
-    i = 0
-
-    for fname in glob.glob(PATH + '**/*.h5',recursive=True):
-        fname_list.append(tuple((i,fname)))
-        i += 1
-
-    return fname_list
-
 
 def build_song(fname_tuple):
     '''
@@ -130,9 +117,9 @@ if __name__ == '__main__':
 
     create_output_dir()
 
-    print('Building filelist')
-    fname_list = build_filelist()
-    print('Built filelist)
+    print('Loading filelist')
+    fname_list = pickle.load(open('fname_list.pkl','rb'))
+    print('Loaded filelist')
 
     print('Building IDX list')
     IDX_list = create_IDX_list()
