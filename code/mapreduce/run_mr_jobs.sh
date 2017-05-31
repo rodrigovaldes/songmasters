@@ -1,9 +1,13 @@
 #!/bin/bash
 
-
+# LEGACY
 # Uses the script that passes pairs of filepaths to compute pairwise distances
 #python3 distance1D_mr.py --jobconf mapreduce.job.reduces=1 pairs_trimmed.csv > temp_distances.tsv
 
+
+
+# Make the pickle
+python3 pickle_dicto.py
 
 # Uses the script that unpickles the catalog to compute pairwise distances
 #python3 pickle2distance1D_mr.py --jobconf mapreduce.job.reduces=1 pairsIDX_trimmed.csv > temp_distances.tsv
