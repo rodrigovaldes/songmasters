@@ -1,5 +1,4 @@
 import os
-import glob
 import tables
 import pickle
 import numpy as np
@@ -19,6 +18,9 @@ PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
 
 def build_song(fname_tuple):
     '''
+    Pulls out important administrative and musical elements from a songfile and
+    stores them in dictionaries.  Returns the song index and the dictionaries.
+
     Code for getters adapted from:
     https://raw.githubusercontent.com/tbertinmahieux/MSongsDB/master/PythonSrc/hdf5_getters.py
     '''
@@ -61,9 +63,9 @@ def build_song(fname_tuple):
     return tuple((songIDX, labels, features))
 
 
-#Need to make it stream through the song files, pickling as it goes
 def pickle_pickles(IDX_tuple):
     '''
+    Pickles a batch of songs into two pickles, administrative and musical.
     '''
     i, local_min, next_thresh = IDX_tuple
 
@@ -113,6 +115,7 @@ def create_IDX_list():
 
     return IDX_list
 
+
 if __name__ == '__main__':
 
     create_output_dir()
@@ -126,6 +129,7 @@ if __name__ == '__main__':
     print('Built IDX list')
 
     print('Pickling pickles')
+    #Update for production environment
     pool = mp.Pool(8)
     pool.map(pickle_pickles, IDX_list)
     pickle.dump(IDX_list, open('IDX_list.pkl', 'wb'))

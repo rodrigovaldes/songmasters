@@ -5,7 +5,11 @@ PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
 
 def build_filelist():
     '''
+    Builds a filelist of all the songfiles in the dataset.  Entries in the list
+    are in the following format:  (i, fname), where i is the song's index in the
+    list and fname is the song's filepath.
     '''
+
     fname_list = []
 
     i = 0
@@ -15,7 +19,6 @@ def build_filelist():
         i += 1
 
     return fname_list
-
 
 
 if __name__ == '__main__':
