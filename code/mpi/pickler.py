@@ -5,9 +5,9 @@ import pickle
 import numpy as np
 import multiprocessing as mp
 
-#Adjust as needed
-MAX_SONGS = 100
-NUM_PKLS = 2
+#Adjust as needed; MAX_SONGS % NUM_PKLS should equal 0
+MAX_SONGS = 10000
+NUM_PKLS = 10
 
 SONGS_PER_PKL = int(MAX_SONGS / NUM_PKLS)
 
@@ -21,10 +21,11 @@ def build_filelist():
     '''
     fname_list = []
 
-    for i in range(MAX_SONGS):
-        for fname in glob.glob(PATH + '**/*.h5',recursive=True):
-            fname_list.append(tuple((i,fname)))
-            i += 1
+    i = 0
+
+    for fname in glob.glob(PATH + '**/*.h5',recursive=True):
+        fname_list.append(tuple((i,fname)))
+        i += 1
 
     return fname_list
 
@@ -37,7 +38,6 @@ def build_song(fname_tuple):
 
     songIDX, fname = fname_tuple
 
-    #song = []
     labels, features = {}, {}
 
     obj = tables.open_file(fname, mode='r')
@@ -56,8 +56,6 @@ def build_song(fname_tuple):
         clean_term = str(term)[2:-1]
         labels['aTerms'].append(clean_term)
 
-    # labels['features'] = []
-
     # Musical characteristics, 5-15
     features['sampleRate'] = np.array(obj.root.analysis.songs.cols.analysis_sample_rate[0])
     features['length'] = np.array(obj.root.analysis.songs.cols.duration[0])
@@ -73,47 +71,30 @@ def build_song(fname_tuple):
 
     obj.close()
 
-
-    # for value in features.values():
-    #     labels['features'].append(value)
-
-    #labels['features'] = features
-
-    '''
-    return song
-    '''
-
     return tuple((songIDX, labels, features))
 
 
 #Need to make it stream through the song files, pickling as it goes
-def pickle_pickles(fname_list):
+def pickle_pickles(IDX_tuple):
     '''
     '''
-    pickled_so_far, local_min = 0, 0
+    i, local_min, next_thresh = IDX_tuple
 
-    next_thresh = SONGS_PER_PKL
+    adminCat, musicalCat = {}, {}
 
-    for i in range(NUM_PKLS):
-        adminCat, musicalCat = {}, {}
-        print('\ni = ',i)
-        print('local_min = ', local_min)
-        print('next_thresh = ', next_thresh)
-        for fname_tuple in fname_list[local_min:next_thresh]:
-            songIDX, adminDicto, musicalDicto = build_song(fname_tuple)
-            print(songIDX)
-            adminCat[songIDX] = adminDicto
-            musicalCat[songIDX] = musicalDicto
-            print('\t len(adminCat) =', len(adminCat.items()))
-        local_min = next_thresh
-        next_thresh += SONGS_PER_PKL
-        pickle.dump(adminCat, open(OUTPUT_DIR + '/admin'+str(i)+'.pkl', 'wb'))
-        pickle.dump(musicalCat, open(OUTPUT_DIR + '/music'+str(i)+'.pkl', 'wb'))
+    for fname_tuple in fname_list[local_min:next_thresh]:
+        songIDX, adminDicto, musicalDicto = build_song(fname_tuple)
+        adminCat[songIDX] = adminDicto
+        musicalCat[songIDX] = musicalDicto
+    local_min = next_thresh
+    next_thresh += SONGS_PER_PKL
+    pickle.dump(adminCat, open(OUTPUT_DIR + '/admin'+str(i)+'.pkl', 'wb'))
+    pickle.dump(musicalCat, open(OUTPUT_DIR + '/music'+str(i)+'.pkl', 'wb'))
 
 
 def create_output_dir():
     '''
-    Creates directory if pickles directory does not already exist.
+    Creates pickles directory if it does not already exist.
     Inputs:
         None.
     Outputs:
@@ -126,8 +107,24 @@ def create_output_dir():
     output_path = os.path.join(cur_path, OUTPUT_DIR)
     if not os.access(output_path, os.F_OK):
         os.makedirs(output_path)
-        print('Created output directory:', output_path)
+        print('Created output directory:\n', output_path)
 
+
+def create_IDX_list():
+    '''
+    Creates a list of tuples of the following format: (i, start, end), where i
+    is the pickle number, start is the starting song index and end is 1 + the
+    ending song index.
+    '''
+
+    IDX_list = []
+
+    for i in range(NUM_PKLS):
+        start = i * SONGS_PER_PKL
+        end = (i + 1) * SONGS_PER_PKL
+        IDX_list.append(tuple((i,start,end)))
+
+    return IDX_list
 
 if __name__ == '__main__':
 
@@ -135,10 +132,14 @@ if __name__ == '__main__':
 
     print('Building filelist')
     fname_list = build_filelist()
+    print('Built filelist)
 
-    print('Built filelist, len = ', len(fname_list))
-    print('Making pickles')
+    print('Building IDX list')
+    IDX_list = create_IDX_list()
+    print('Built IDX list')
 
-    pickle_pickles(fname_list)
-
+    print('Pickling pickles')
+    pool = mp.Pool(8)
+    pool.map(pickle_pickles, IDX_list)
+    pickle.dump(IDX_list, open('IDX_list.pkl', 'wb'))
     print('Pickles pickled')
