@@ -19,7 +19,8 @@ PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
 def build_song(fname_tuple):
     '''
     Pulls out important administrative and musical elements from a songfile and
-    stores them in dictionaries.  Returns the song index and the dictionaries.
+    stores them in dictionaries.  Returns a tuple of the song index and the
+    dictionaries.
 
     Code for getters adapted from:
     https://raw.githubusercontent.com/tbertinmahieux/MSongsDB/master/PythonSrc/hdf5_getters.py

@@ -1,7 +1,8 @@
 import tables
 import numpy as np
 from mrjob.job import MRJob
-from scipy.spatial.distance import correlation as dc
+#from scipy.spatial.distance import correlation as dc
+from sklearn.metrics.pairwise import cosine_similarity as cs
 
 #Need to change path once it is known for the remote machine
 PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
@@ -120,7 +121,7 @@ class SongDist(MRJob):
 
         vector = np.concatenate(array_flat)
 
-        return vector
+        return vector.reshape(1,-1)
 
 
     def distance(self, songA, songB):
@@ -131,9 +132,10 @@ class SongDist(MRJob):
             songA_vec = self.flat(songA)
             songB_vec = self.flat(songB)
 
-            dist = dc(songA_vec,songB_vec)
+            #dist = dc(songA_vec,songB_vec)
+            dist = cs(songA_vec,songB_vec)
 
-            return dist
+            return dist[0][0]
 
         except:
             print('Couldn\'t take distance for some reason')

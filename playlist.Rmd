@@ -1,0 +1,51 @@
+---
+title: "Preliminary Results (using a sample of 100,000 comparisons):  Playlist"
+
+author: "Rodrigo Valdés Ortiz, Wanlin Ji, & Erin M. Ochoa"
+
+date: "<p>Computer Science with Applications III: &nbsp;2017 Spring</p><p>2017 June 2</p>"
+output:
+  html_document:
+    toc: true
+    toc_depth: 1
+---
+
+<style>
+  body {background-color: white;}
+  h1 {color: lightseagreen;}
+  h2 {color: deeppink;}
+  h3 {color: blueviolet;}
+  p {color: dimgray;}
+  a {color: lightseagreen;}
+  a:hover {color:white; background-color: lightseagreen;}
+}
+</style>
+
+# The most eclectic song:  0.30869041818
+
+## 9561:  Erik Berglund, “Endless Light”
+https://www.youtube.com/watch?v=NrJ2sxJxKdM
+
+# The most formulaic song:  0.95983892412
+
+## The Jordanaires & Orion, “Up on the House Top”
+https://www.youtube.com/watch?v=ATmtfNytjbM
+
+# The two most similar songs:  0.998772504133
+
+## 9705:  Wyclef Jean, “Midnight Lovers”
+https://www.youtube.com/watch?v=7atcAM_q09A
+
+
+## 9743:  Porter Wagoner, “I Can't Be Your Man” (13-second version)
+https://www.youtube.com/watch?v=Y_5zxCMenjk&index=42&list=PLa87PXxmPasoVBqqdCPNOoGPtEhtHHzLl
+
+# The two least similar songs:  0.277422780187
+
+## 9561:  Erik Berglund, “Endless Light”
+https://www.youtube.com/watch?v=NrJ2sxJxKdM
+
+## 9764:  Earth, “Thrones And Dominions”
+https://www.youtube.com/watch?v=qRW5RI3kDBU
+
+<p align=right><a href="#top" style="color:coral;background-color:white;">Table of Contents</a></p>
