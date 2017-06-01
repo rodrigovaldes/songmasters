@@ -21,31 +21,30 @@ output:
 }
 </style>
 
-# The most eclectic song:  0.30869041818
+# The most eclectic song:  0.01248307392
 
-## 9561:  Erik Berglund, “Endless Light”
-https://www.youtube.com/watch?v=NrJ2sxJxKdM
+## 9720:  Hinge, “Pray The I Miss” (sic)
+https://www.youtube.com/watch?v=hTre0mvaMFU
 
-# The most formulaic song:  0.95983892412
+# The most formulaic song:  0.41185859225
 
-## The Jordanaires & Orion, “Up on the House Top”
-https://www.youtube.com/watch?v=ATmtfNytjbM
+## 9963:  Owsley, “Class Clown/Good Old Days (Reprise)”
+https://www.youtube.com/watch?v=AWdtGTN4rnI
 
-# The two most similar songs:  0.998772504133
+# The two most similar songs:  0.900037116660
 
-## 9705:  Wyclef Jean, “Midnight Lovers”
-https://www.youtube.com/watch?v=7atcAM_q09A
+## 9725:  Livio Minafra, “Campane”
+https://www.youtube.com/watch?v=ovZLU3Qy7DM
 
+## 9925:  Semprini, “Rhapsody In Blue”
+https://www.youtube.com/watch?v=MahDvRVGQfg
 
-## 9743:  Porter Wagoner, “I Can't Be Your Man” (13-second version)
-https://www.youtube.com/watch?v=Y_5zxCMenjk&index=42&list=PLa87PXxmPasoVBqqdCPNOoGPtEhtHHzLl
+# The two least similar songs:  1.546504982019e-05
 
-# The two least similar songs:  0.277422780187
+## 9734:  Van Halen, “Why Can't This Be Love (Remastered Version)”
+https://www.youtube.com/watch?v=1VaEdKwXJhM
 
-## 9561:  Erik Berglund, “Endless Light”
-https://www.youtube.com/watch?v=NrJ2sxJxKdM
-
-## 9764:  Earth, “Thrones And Dominions”
-https://www.youtube.com/watch?v=qRW5RI3kDBU
+## 9943:  X-Ecutioners featuring Big Pun, “The Drama (intro)”
+https://www.youtube.com/watch?v=sCAr8qFIGyI
 
 <p align=right><a href="#top" style="color:coral;background-color:white;">Table of Contents</a></p>
