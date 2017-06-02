@@ -13,8 +13,8 @@ SONGS_PER_PKL = int(MAX_SONGS / NUM_PKLS)
 OUTPUT_DIR = 'pickles'
 
 #Change this once the remote path is known
-PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
-
+#PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
+PATH = '/mnt/storage/millon-song-dataset/'
 
 def build_song(fname_tuple):
     '''
