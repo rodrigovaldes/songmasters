@@ -1,15 +1,14 @@
 ---
 title: "Preliminary Results (using a sample of 100,000 comparisons):  Playlist"
-
+subtitle: "Computer Science with Applications III: &nbsp;2017 Spring"
 author: "Rodrigo Valdés Ortiz, Wanlin Ji, & Erin M. Ochoa"
+date: "2017 June 2"
 
-date: "<p>Computer Science with Applications III: &nbsp;2017 Spring</p><p>2017 June 2</p>"
 output:
-  html_document:
+  github_document:
     toc: true
     toc_depth: 1
 ---
-
 <style>
   body {background-color: white;}
   h1 {color: lightseagreen;}
@@ -26,10 +25,20 @@ output:
 ## 9720:  Hinge, “Pray The I Miss” (sic)
 https://www.youtube.com/watch?v=hTre0mvaMFU
 
-# The most formulaic song:  0.41185859225
+<hr>
 
-## 9963:  Owsley, “Class Clown/Good Old Days (Reprise)”
+# The most formulaic songs (examples from the top ten)
+
+## 9963:  Owsley, “Class Clown/Good Old Days (Reprise)”:  0.41185859225
 https://www.youtube.com/watch?v=AWdtGTN4rnI
+
+## 9709: Joe Satriani, "House Full Of Bullets":  0.40674033814578203
+https://www.youtube.com/watch?v=p2q9ML4iknE
+
+## 9601:  Joe Lynn Turner, "Two Lights [Bonus Track]":  0.4037701720913262
+https://www.youtube.com/watch?v=Vf_Dxnor64E
+
+<hr>
 
 # The two most similar songs:  0.900037116660
 
@@ -38,6 +47,8 @@ https://www.youtube.com/watch?v=ovZLU3Qy7DM
 
 ## 9925:  Semprini, “Rhapsody In Blue”
 https://www.youtube.com/watch?v=MahDvRVGQfg
+
+<hr>
 
 # The two least similar songs:  1.546504982019e-05
 
