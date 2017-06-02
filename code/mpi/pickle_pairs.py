@@ -225,23 +225,22 @@ if __name__ == '__main__':
     comm = MPI.COMM_WORLD
     rank, size = comm.Get_rank(), comm.Get_size()
 
-    rRank, obj = deliver_pickles(q) # What is rRank??
+    obj = deliver_pickles(q)
     SENT = size - 1
 
-    if rRank:
+    if type(obj) == tuple:
         pair = obj
-        # q = 0 # We can delete this
-    else:
-        q = obj ## This will break the code if it arrive to q.get() a few lines ahead
-        pair = 0
+        results = process_pair(pair)
+        comm.send(results, dest=0)
+        #NEED TO GET MORE PAIRS, PROCESS THEM, AND SEND RESULTS
 
-    if pair:
-        results = process_pair(pair) ### Process pair require a tuple. This will brake when pair == 0
-        comm.send(results, dest=0)#, tag=rank)
+        #WHAT ABOUT ISEND, IRECV?  WAIT?  TEST?
+
     else:
+        q = obj
         while SENT < NUM_PAIRS or RECV < NUM_PAIRS:
             #http://nullege.com/codes/search/mpi4py.MPI.ANY_SOURCE
-            distances = comm.recv(source=MPI.ANY_SOURCE, status=status) ## Apparently, this may run for all the nodes and not only the master
+            distances = comm.recv(source=MPI.ANY_SOURCE, status=status)
             incoming_rank = source.Get_source()
             write_dist(distances)
             RECV += 1
