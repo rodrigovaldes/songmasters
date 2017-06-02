@@ -76,8 +76,8 @@ def pickle_pickles(IDX_tuple):
         songIDX, adminDicto, musicalDicto = build_song(fname_tuple)
         adminCat[songIDX] = adminDicto
         musicalCat[songIDX] = musicalDicto
-    local_min = next_thresh
-    next_thresh += SONGS_PER_PKL
+    #local_min = next_thresh
+    #next_thresh += SONGS_PER_PKL
     pickle.dump(adminCat, open(OUTPUT_DIR + '/admin'+str(i)+'.pkl', 'wb'))
     pickle.dump(musicalCat, open(OUTPUT_DIR + '/music'+str(i)+'.pkl', 'wb'))
 
