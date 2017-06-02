@@ -5,8 +5,8 @@ Rodrigo Valdés Ortiz, Wanlin Ji, & Erin M. Ochoa
 
 -   [The most eclectic song: 0.01248307392](#the-most-eclectic-song-0.01248307392)
 -   [The most formulaic songs (examples from the top ten)](#the-most-formulaic-songs-examples-from-the-top-ten)
--   [The two most similar songs: 0.900037116660](#the-two-most-similar-songs-0.900037116660)
 -   [The two least similar songs: 1.546504982019e-05](#the-two-least-similar-songs-1.546504982019e-05)
+-   [The two most similar songs: 0.900037116660](#the-two-most-similar-songs-0.900037116660)
 
 <style>
   body {background-color: white;}
@@ -46,20 +46,6 @@ The most formulaic songs (examples from the top ten)
 <https://www.youtube.com/watch?v=Vf_Dxnor64E>
 
 <hr>
-The two most similar songs: 0.900037116660
-==========================================
-
-9725: Livio Minafra, “Campane”
-------------------------------
-
-<https://www.youtube.com/watch?v=ovZLU3Qy7DM>
-
-9925: Semprini, “Rhapsody In Blue”
-----------------------------------
-
-<https://www.youtube.com/watch?v=MahDvRVGQfg>
-
-<hr>
 The two least similar songs: 1.546504982019e-05
 ===============================================
 
@@ -72,6 +58,20 @@ The two least similar songs: 1.546504982019e-05
 ---------------------------------------------------------
 
 <https://www.youtube.com/watch?v=sCAr8qFIGyI>
+
+<hr>
+The two most similar songs: 0.900037116660
+==========================================
+
+9725: Livio Minafra, “Campane”
+------------------------------
+
+<https://www.youtube.com/watch?v=ovZLU3Qy7DM>
+
+9925: Semprini, “Rhapsody In Blue”
+----------------------------------
+
+<https://www.youtube.com/watch?v=MahDvRVGQfg>
 
 <p align="right">
 <a href="#top" style="color:coral;background-color:white;">Table of Contents</a>
