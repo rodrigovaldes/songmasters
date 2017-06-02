@@ -13,10 +13,12 @@ NUM_PKLS = 10
 
 NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
+OUTPUT_DIR = 'distances'
+
 M = '/pickles/music'
 P = '.pkl'
 D = '/distances/dist'
-C = '.csv'
+T = '.tsv'
 
 def pick_pairs():
     '''
@@ -41,7 +43,7 @@ def deliver_pickles(q):
 
     if rank == 0:
         if not q.empty():
-            for i in range(1,NUM_SLAVES + 1):
+            for i in range(1,size + 1):
                 a,b = q.get()
                 unPickleA = pickle.load(open(a, "rb" ))
                 if b:
@@ -57,10 +59,10 @@ def deliver_pickles(q):
 
         else:
             print('Sent all pairs for processing')
-            return None
+            return None, None
     else:
         pair = tuple()
-        comm.Recv(pair,source=0)
+        comm.recv(pair,source=0)
         print('Slave',rank,'received a pair')
 
         return rank, pair
@@ -183,22 +185,48 @@ def distance(songA, songB):
         print('Couldn\'t take distance for some reason')
 
 
+def write_dist(distances):
+    '''
+    '''
+    fname = D + str(RECV) + T
+    f = open(fname,'wb')
+    for dist_tuple in distances:
+        idxList, dist = dist_tuple
+        f.write(idxList,'\t',dist,'\n')
+    f.close()
+
+
+def create_output_dir():
+    '''
+    Creates distances directory if it does not already exist.
+    Inputs:
+        None.
+    Outputs:
+        The output directory at current_path/OUTPUT_DIR.
+    Returns:
+        None.
+    '''
+
+    cur_path = os.path.split(os.path.abspath(__file__))[0]
+    output_path = os.path.join(cur_path, OUTPUT_DIR)
+    if not os.access(output_path, os.F_OK):
+        os.makedirs(output_path)
+        print('Created output directory:\n', output_path)
 
 
 if __name__ == '__main__':
 
-    #NEED TO CREATE DISTANCES DIR IF IT DOESN'T ALREADY EXIST
+    create_output_dir()
 
     q = pick_pairs()
 
     RECV = 0
 
-
-
     comm = MPI.COMM_WORLD
     rank, size = comm.Get_rank(), comm.Get_size()
 
     rRank, obj = deliver_pickles(q)
+    SENT = size - 1
 
     if rRank:
         pair = obj
@@ -211,24 +239,18 @@ if __name__ == '__main__':
         results = process_pair(pair)
         comm.send(results, dest=0)#, tag=rank)
     else:
-        for i range(1,size + 1):#Need to receive results
-            distances = []
-            comm.receive(distances,source=i)
-            fname = D + str(RECV) + C
-            f = open(fname,'wb')
-            for dist_tuple in distances:
-                idxList, dist = dist_tuple
-                f.write(idxList,'\t',dist,'\n')
-            f.close()
-            '''
-            '''
+        while SENT < NUM_PAIRS or RECV < NUM_PAIRS:
+            #http://nullege.com/codes/search/mpi4py.MPI.ANY_SOURCE
+            distances = comm.recv(source=MPI.ANY_SOURCE, status=status)
+            incoming_rank = source.Get_source()
+            write_dist(distances)
+            RECV += 1
+            if SENT < NUM_PAIRS:
+                pair = q.get()
+                comm.send(pair, dest=incoming_rank)
+                SENT += 1
 
 
-    if rank == 0:
-        data = np.array([1, 2, 3, 4], dtype=np.int)
-        comm.send(data, dest=1, tag=7)
-        print 'Send', data
-    elif rank == 1:
-        data = np.empty(4, dtype=np.int)
-        comm.recv(data, source=0, tag=7)
-        print 'Received', data
+
+            '''
+            '''
