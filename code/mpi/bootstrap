@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Linux installing
+sudo apt-get install mpich
+echo internal-ip-1 >> hosts
+echo internal-ip-2 >> hosts
+sudo apt-get install python-pip
+sudo apt-get install python-dev
+sudo apt-get install python3-dev
+sudo apt-get install python3-pip
+
+# Python Packages for MPI
+sudo python3.4 -m pip install mpi4y
+sudo python3.4 -m pip install numpy
+
+# Python Packages for calculation
+sudo python3.4 -m pip install multiprocessing
+sudo python3.4 -m pip install tables
+sudo python3.4 -m pip install pickle
+sudo python3.4 -m pip install mrjob
+sudo python3.4 -m pip install sklearn
+
+done
