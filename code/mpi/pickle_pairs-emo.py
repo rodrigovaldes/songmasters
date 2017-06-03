@@ -20,7 +20,7 @@ PATH = '/mnt/storage/millon-song-dataset'
 
 M = PATH + '/pickles/music'
 P = '.pkl'
-D = '/distances/dist'
+D = 'distances/dist'
 T = '.tsv'
 
 
@@ -198,7 +198,6 @@ def process_pickle_pairs(q, rank, size):
     done = False
 
     while not done:
-
         if rank == 0:
             while not q.empty():
                 for i in range(1, size):
@@ -214,8 +213,9 @@ def process_pickle_pairs(q, rank, size):
                         distances = comm.send(pair,dest=i)
                         print('Sending pair to slave', i)
 
-                results = comm.gather(distances,root=0)
-                print('Received some results')
+                distances = None
+                results = comm.gather(distances)
+                print('Received some results:',results)
                 write_dist(results,n)
                 n += 1
 
@@ -232,6 +232,7 @@ def process_pickle_pairs(q, rank, size):
             # ^^ complicated tag thing
 
             #if comm.recv(pair,source=0):    #Not sure if this will work
+
             pair = comm.recv(source=0)
             print('\nSlave',rank,'received a pair')
             distances = process_pair(pair)
