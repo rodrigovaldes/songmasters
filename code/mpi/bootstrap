@@ -1,7 +1,12 @@
 #!/bin/sh
 
 # Linux installing
+
+# Had to change sources.list file as outlined here:
+# https://unix.stackexchange.com/questions/250589/debian-8-jessie-e-unable-to-locate-package-lmms
 sudo apt-get install mpich
+
+#Input machines' internal IPs
 echo internal-ip-1 >> hosts
 echo internal-ip-2 >> hosts
 

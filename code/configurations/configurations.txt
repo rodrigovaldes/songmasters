@@ -1,10 +1,12 @@
-# Dowload a file from https://repo.continuum.io/archive/Anaconda3-4.4.0-Linux-x86_64.sh
+# Download a file:
+wget https://repo.continuum.io/archive/Anaconda3-4.4.0-Linux-x86_64.sh
 
 #!/bin/sh
 bash Anaconda3-4.4.0-Linux-x86_64.sh
 
 # Close terminal
 
-# With the new terminal, 
+# With the new terminal:
+export PATH=~/anaconda3/bin:$PATH
 conda install -c anaconda mpi4py=2.0.0
 
