@@ -5,7 +5,7 @@ import numpy as np
 import multiprocessing as mp
 
 #Adjust as needed; MAX_SONGS % NUM_PKLS should equal 0
-MAX_SONGS = 10000
+MAX_SONGS = 1000
 NUM_PKLS = 10
 
 SONGS_PER_PKL = int(MAX_SONGS / NUM_PKLS)

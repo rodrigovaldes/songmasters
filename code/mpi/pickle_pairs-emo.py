@@ -16,10 +16,12 @@ NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
 OUTPUT_DIR = 'distances'
 
-PATH = '/mnt/storage/millon-song-dataset'
+#PATH = '/mnt/storage/millon-song-dataset'
+PATH = '/home/rvocss/song_data/MillionSongSubset/data'
 
 #M = PATH + '/pickles/music'
-M = 'music'
+#M = 'music'
+M = 'pickles/music'
 
 P = '.pkl'
 D = 'distances/dist'
