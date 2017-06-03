@@ -9,7 +9,6 @@ from sklearn.metrics.pairwise import cosine_similarity as cs
 
 #Change as needed
 NUM_PKLS = 10
-#NUM_SLAVES = 10
 
 NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
@@ -19,6 +18,7 @@ M = '/pickles/music'
 P = '.pkl'
 D = '/distances/dist'
 T = '.tsv'
+
 
 def pick_pairs():
     '''
@@ -35,37 +35,6 @@ def pick_pairs():
         q.put(tuple((M + str(i) + P, None)))
 
     return q
-
-
-def deliver_pickles(q):
-    '''
-    '''
-
-    if rank == 0:
-        if not q.empty():
-            for i in range(1,size + 1):
-                a,b = q.get()
-                unPickleA = pickle.load(open(a, "rb" ))
-                if b:
-                    unPickleB = pickle.load(open(b,"rb"))
-                else:
-                    unPickleB = None
-                pair = tuple((unPickleA, unPickleB))
-
-                comm.Send(pair,dest=i)
-                print('Sending pair to slave', i)
-
-            return rank, q
-
-        else:
-            print('Sent all pairs for processing')
-            return None, None
-    else:
-        pair = tuple()
-        comm.recv(pair,source=0)
-        print('Slave',rank,'received a pair')
-
-        return rank, pair
 
 
 def process_pair(pair):
@@ -136,12 +105,12 @@ def pairwise_comparison(songA, songB):
             #Pad arrays for songB
             # THIS IS WRONG, NEED TO CHANGE DIC TO LIST from Pickle
             for i in ['segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre']:
-                songB[i] = self.pad_array(songB[i],max_len)
+                songB[i] = pad_array(songB[i],max_len)
         else:
             #Pad arrays for songA
             # THIS IS WRONG, NEED TO CHANGE DIC TO LIST from Pickle
             for i in ['segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre']:
-                songA[i] = self.pad_array(songA[i],max_len)
+                songA[i] = pad_array(songA[i],max_len)
 
     #songA = list(itemgetter('segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre')(songA))
     #songB = list(itemgetter('segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre')(songB))
@@ -149,10 +118,9 @@ def pairwise_comparison(songA, songB):
     songA = list(itemgetter('sampleRate','length','key','loud','tempo','timeSignature','segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre')(songA))
     songB = list(itemgetter('sampleRate','length','key','loud','tempo','timeSignature','segLoudMax', 'segLoudMaxTime', 'segPitches', 'segStart', 'segTimbre')(songB))
 
-    dist = self.distance(songA, songB)
+    dist = distance(songA, songB)
 
     return dist
-    # return "one"
 
 
 def flat(array_list):
@@ -173,10 +141,9 @@ def distance(songA, songB):
     '''
 
     try:
-        songA_vec = self.flat(songA)
-        songB_vec = self.flat(songB)
+        songA_vec = flat(songA)
+        songB_vec = flat(songB)
 
-        #dist = dc(songA_vec,songB_vec)
         dist = cs(songA_vec,songB_vec)
 
         return dist[0][0]
@@ -185,10 +152,10 @@ def distance(songA, songB):
         print('Couldn\'t take distance for some reason')
 
 
-def write_dist(distances):
+def write_dist(distances,n):
     '''
     '''
-    fname = D + str(RECV) + T
+    fname = D + str(n) + T
     f = open(fname,'wb')
     for dist_tuple in distances:
         idxList, dist = dist_tuple
@@ -214,42 +181,73 @@ def create_output_dir():
         print('Created output directory:\n', output_path)
 
 
+
+def process_pickle_pairs(q, rank, size):
+    '''
+    '''
+
+    n = 0
+
+    done = False
+
+    while not done:
+
+        if rank == 0:
+            while not q.empty():
+                for i in range(1, size + 1):
+                        a,b = q.get()
+                        pickleA = open(a,"rb")
+                        if b:
+                            pickleB = open(b,"rb")
+                        else:
+                            pickleB = None
+                        pair = tuple((unPickleA, unPickleB))
+
+                        comm.Send(pair,dest=i)
+                        print('Sending pair to slave', i)
+
+                        results = comm.gather()
+                        print('Received some results')
+                        write_dist(results,n)
+                        n += 1
+
+            print('Sent all pairs for processing')
+
+            results = comm.gather()
+            write_dist(results,n)
+            print('Received all results')
+            done = True
+
+        else:
+            done = True
+            pair = tuple()
+
+            #This may hang here once the master stops sending (but maybe not);
+            #we could try this complicated tag thing to break out of the waiting to recv,
+            #but there must be a better way
+            #https://stackoverflow.com/questions/21088420/mpi4py-send-recv-with-tag
+            # ^^ complicated tag thing
+
+            if comm.recv(pair,source=0):    #Not sure if this will work
+            #pair = comm.recv(source=0)
+                print('\nSlave',rank,'received a pair')
+                distances = process_pair(pair)
+                comm.send(distances)
+                print('\nSlave',rank,'sent distances')
+                done = False
+
+    return True
+
 if __name__ == '__main__':
 
-    create_output_dir()
-
-    q = pick_pairs()
-
-    RECV = 0
 
     comm = MPI.COMM_WORLD
     rank, size = comm.Get_rank(), comm.Get_size()
 
-    obj = deliver_pickles(q)
-    SENT = size - 1
-
-    if type(obj) == tuple:
-        pair = obj
-        results = process_pair(pair)
-        comm.send(results, dest=0)
-        #NEED TO GET MORE PAIRS, PROCESS THEM, AND SEND RESULTS
-
-        #WHAT ABOUT ISEND, IRECV?  WAIT?  TEST?
-
+    if rank == 0:
+        create_output_dir()
+        q = pick_pairs()
     else:
-        q = obj
-        while SENT < NUM_PAIRS or RECV < NUM_PAIRS:
-            #http://nullege.com/codes/search/mpi4py.MPI.ANY_SOURCE
-            distances = comm.recv(source=MPI.ANY_SOURCE, status=status)
-            incoming_rank = source.Get_source()
-            write_dist(distances)
-            RECV += 1
-            if SENT < NUM_PAIRS:
-                pair = q.get()
-                comm.send(pair, dest=incoming_rank)
-                SENT += 1
+        q = None
 
-
-
-            '''
-            '''
+    process_pickle_pairs(q, rank, size)
