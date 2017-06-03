@@ -18,7 +18,9 @@ OUTPUT_DIR = 'distances'
 
 PATH = '/mnt/storage/millon-song-dataset'
 
-M = PATH + '/pickles/music'
+#M = PATH + '/pickles/music'
+M = 'music'
+
 P = '.pkl'
 D = 'distances/dist'
 T = '.tsv'
@@ -162,12 +164,15 @@ def distance(songA, songB):
 def write_dist(distances,n):
     '''
     '''
+    print("distances=",distances)
     fname = D + str(n) + T
     f = open(fname,'wb')
-    for dist_tuple in distances:
-        idxList, dist = dist_tuple
-        f.write(idxList,'\t',dist,'\n')
-    f.close()
+    if distances:
+        for dist_tuple in distances:
+            if dist_tuple:
+                idxList, dist = dist_tuple
+                f.write(idxList,'\t',dist,'\n')
+        f.close()
 
 
 def create_output_dir():
@@ -210,7 +215,7 @@ def process_pickle_pairs(q, rank, size):
 
                     comm.send(pair,dest=i)
                     print('Sending pair to slave', i)
-
+        distances = []
 
 
     else:
