@@ -21,7 +21,7 @@ PATH = '/home/rvocss/song_data/MillionSongSubset/data'
 
 #M = PATH + '/pickles/music'
 #M = 'music'
-M = 'pickles/music'
+M = '/home/rvocss/songmasters/code/mpi/pickles/music'
 
 P = '.pkl'
 D = 'distances/dist'
@@ -59,7 +59,14 @@ def process_pair(pair):
         for idxA, songA in unpickleA.items():
             for idxB, songB in unpickleB.items():
                 idxList = [idxA, idxB]
-                dist = pairwise_comparison(songA,songB)
+                dist ckleA = open(a,'rb').read()
+                    #pickleA = pickle.loads(open(a,"rb"))
+                    if b:
+                        pickleB = open(b,'rb').read()
+                        #pickleB = pickle.loads(open(b,"rb"))
+                    else:
+                        pickleB = None
+                    pair = {'a':pickleA, 'b':pickleB}0= pairwise_comparison(songA,songB)
                 distances.append(tuple((idxList,dist)))
     else:
         keys = list(a.keys())
@@ -206,11 +213,11 @@ def process_pickle_pairs(q, rank, size):
             for i in range(1, size):
                     a,b = q.get()
                     print('Loading pickles')
-                    pickleA = open(a,'rb').read()
-                    #pickleA = pickle.loads(open(a,"rb"))
+                    #pickleA = open(a,'rb').read()
+                    pickleA = pickle.load(open(a,"rb"))
                     if b:
-                        pickleB = open(b,'rb').read()
-                        #pickleB = pickle.loads(open(b,"rb"))
+                        #pickleB = open(b,'rb').read()
+                        pickleB = pickle.load(open(b,"rb"))
                     else:
                         pickleB = None
                     pair = {'a':pickleA, 'b':pickleB}
@@ -244,6 +251,7 @@ if __name__ == '__main__':
         create_output_dir()
         print('Making queue')
         q = pick_pairs()
+        print("finish with the q")
     else:
         q = None
 
