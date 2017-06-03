@@ -46,12 +46,12 @@ def process_pair(pair):
     '''
     a,b  = pair['a'], pair['b']
 
-    unpickleA = a#pickle.load(a)
+    unpickleA = pickle.loads(a)
 
     distances = []
 
     if b:
-        unpickleB = b#pickle.load(b)
+        unpickleB = pickle.loads(b)
         for idxA, songA in unpickleA.items():
             for idxB, songB in unpickleB.items():
                 idxList = [idxA, idxB]
@@ -194,31 +194,35 @@ def process_pickle_pairs(q, rank, size):
     '''
 
     n = 0
-
-    while not q.empty():
-        if rank == 0:
+    if rank == 0:
+        while not q.empty():
             for i in range(1, size):
                     a,b = q.get()
                     print('Loading pickles')
-                    pickleA = pickle.load(open(a,"rb"))
+                    pickleA = open(a,'rb').read()
+                    #pickleA = pickle.loads(open(a,"rb"))
                     if b:
-                        pickleB = pickle.load(open(b,"rb"))
+                        pickleB = open(b,'rb').read()
+                        #pickleB = pickle.loads(open(b,"rb"))
                     else:
                         pickleB = None
                     pair = {'a':pickleA, 'b':pickleB}
 
                     comm.send(pair,dest=i)
                     print('Sending pair to slave', i)
-                    distances = process_pair(pair)
-        else:
-            distances = None
 
-        results = comm.gather(distances, rank=0)
 
-        if rank == 0:
-            write_dist(results,n)
-            n += 1
 
+    else:
+        pair = comm.recv(source=0)
+        distances = process_pair(pair)
+
+
+    results = comm.gather(distances, root=0)
+
+    if rank == 0:
+        write_dist(results,n)
+        n += 1
 
 
 if __name__ == '__main__':
