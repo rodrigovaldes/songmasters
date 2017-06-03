@@ -1,5 +1,6 @@
 import os
 import pickle
+import numpy as np
 from mpi4py import MPI
 from queue import Queue
 from scipy.misc import comb
@@ -9,7 +10,7 @@ from sklearn.metrics.pairwise import cosine_similarity as cs
 
 
 #Change as needed
-NUM_PKLS = 10
+NUM_PKLS = 2#10
 
 NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
@@ -45,12 +46,12 @@ def process_pair(pair):
     '''
     a,b  = pair['a'], pair['b']
 
-    unpickleA = pickle.load(a)
+    unpickleA = a#pickle.load(a)
 
     distances = []
 
     if b:
-        unpickleB = pickle.load(b)
+        unpickleB = b#pickle.load(b)
         for idxA, songA in unpickleA.items():
             for idxB, songB in unpickleB.items():
                 idxList = [idxA, idxB]
@@ -202,9 +203,10 @@ def process_pickle_pairs(q, rank, size):
             while not q.empty():
                 for i in range(1, size):
                         a,b = q.get()
-                        pickleA = open(a,"rb").read()
+                        print('Loading pickles')
+                        pickleA = pickle.load(open(a,"rb"))
                         if b:
-                            pickleB = open(b,"rb").read()
+                            pickleB = pickle.load(open(b,"rb"))
                         else:
                             pickleB = None
                         pair = {'a':pickleA, 'b':pickleB}
@@ -237,18 +239,21 @@ def process_pickle_pairs(q, rank, size):
             print('\nSlave',rank,'sent distances')
             done = False
 
-    return True
 
 if __name__ == '__main__':
 
-
+    print('Entered main')
     comm = MPI.COMM_WORLD
     rank, size = comm.Get_rank(), comm.Get_size()
 
+    print('Rank = {}; size = {}'.format(rank,size))
+
     if rank == 0:
         create_output_dir()
+        print('Making queue')
         q = pick_pairs()
     else:
         q = None
 
+    print('About to call process_pickle_pairs')
     process_pickle_pairs(q, rank, size)
