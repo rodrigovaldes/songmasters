@@ -195,50 +195,30 @@ def process_pickle_pairs(q, rank, size):
 
     n = 0
 
-    done = False
-
-    while not done:
+    while not q.empty():
         if rank == 0:
-            while not q.empty():
-                for i in range(1, size):
-                        a,b = q.get()
-                        print('Loading pickles')
-                        pickleA = pickle.load(open(a,"rb"))
-                        if b:
-                            pickleB = pickle.load(open(b,"rb"))
-                        else:
-                            pickleB = None
-                        pair = {'a':pickleA, 'b':pickleB}
+            for i in range(1, size):
+                    a,b = q.get()
+                    print('Loading pickles')
+                    pickleA = pickle.load(open(a,"rb"))
+                    if b:
+                        pickleB = pickle.load(open(b,"rb"))
+                    else:
+                        pickleB = None
+                    pair = {'a':pickleA, 'b':pickleB}
 
-                        distances = comm.send(pair,dest=i)
-                        print('Sending pair to slave', i)
-
-                distances = None
-                results = comm.gather(distances)
-                print('Received some results:',results)
-                write_dist(results,n)
-                n += 1
-
-            done = True
-
+                    comm.send(pair,dest=i)
+                    print('Sending pair to slave', i)
+                    distances = process_pair(pair)
         else:
-            done = True
-            #pair = []
+            distances = None
 
-            #This may hang here once the master stops sending (but maybe not);
-            #we could try this complicated tag thing to break out of the waiting to recv,
-            #but there must be a better way
-            #https://stackoverflow.com/questions/21088420/mpi4py-send-recv-with-tag
-            # ^^ complicated tag thing
+        results = comm.gather(distances, rank=0)
 
-            #if comm.recv(pair,source=0):    #Not sure if this will work
+        if rank == 0:
+            write_dist(results,n)
+            n += 1
 
-            pair = comm.recv(source=0)
-            print('\nSlave',rank,'received a pair')
-            distances = process_pair(pair)
-            comm.send(distances)
-            print('\nSlave',rank,'sent distances')
-            done = False
 
 
 if __name__ == '__main__':
