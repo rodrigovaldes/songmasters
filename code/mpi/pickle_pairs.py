@@ -206,16 +206,11 @@ def process_pickle_pairs(q, rank, size):
                         comm.Send(pair,dest=i)
                         print('Sending pair to slave', i)
 
-                        results = comm.gather()
-                        print('Received some results')
-                        write_dist(results,n)
-                        n += 1
+                results = comm.gather()
+                print('Received some results')
+                write_dist(results,n)
+                n += 1
 
-            print('Sent all pairs for processing')
-
-            results = comm.gather()
-            write_dist(results,n)
-            print('Received all results')
             done = True
 
         else:
