@@ -5,7 +5,7 @@ from scipy.misc import comb
 from operator import itemgetter
 from itertools import combinations as combo
 from sklearn.metrics.pairwise import cosine_similarity as cs
-
+import os
 
 #Change as needed
 NUM_PKLS = 10
@@ -14,7 +14,7 @@ NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
 OUTPUT_DIR = 'distances'
 
-M = '/pickles/music'
+M = 'pickles/music'
 P = '.pkl'
 D = '/distances/dist'
 T = '.tsv'
@@ -23,17 +23,20 @@ T = '.tsv'
 def pick_pairs():
     '''
     '''
-
+    
     q = Queue(NUM_PAIRS)
+    print("q successful")
 
     for i, j in combo(range(0,NUM_PKLS),2):
         iPkl = M + str(i) + P
         jPkl = M + str(j) + P
+        print("about to put something in the q")
         q.put(tuple((iPkl,jPkl)))
 
     for i in range(0,NUM_PKLS):
         q.put(tuple((M + str(i) + P, None)))
-
+    
+    print("end of pick_pairs()")
     return q
 
 
@@ -194,17 +197,26 @@ def process_pickle_pairs(q, rank, size):
 
         if rank == 0:
             while not q.empty():
-                for i in range(1, size + 1):
+                print("start infinite loop")
+
+                for i in range(1, size):
                         a,b = q.get()
                         pickleA = open(a,"rb")
+                        print("success with P-A")
+
                         if b:
                             pickleB = open(b,"rb")
+                            print("success P-B, in if B")
                         else:
                             pickleB = None
-                        pair = tuple((unPickleA, unPickleB))
-
-                        comm.Send(pair,dest=i)
+                            print("P-B == None")
+                        pair = tuple((pickleA.read(), pickleB.read()))
+                        print("success creation of pair")
+                        
+                        comm.send(pair,dest=i)
                         print('Sending pair to slave', i)
+
+                print("Finish the sending loop")
 
                 results = comm.gather()
                 print('Received some results')
@@ -216,6 +228,7 @@ def process_pickle_pairs(q, rank, size):
         else:
             done = True
             pair = tuple()
+            print("First time not in the master node")
 
             #This may hang here once the master stops sending (but maybe not);
             #we could try this complicated tag thing to break out of the waiting to recv,
@@ -238,11 +251,13 @@ if __name__ == '__main__':
 
     comm = MPI.COMM_WORLD
     rank, size = comm.Get_rank(), comm.Get_size()
-
+    print("first test")
     if rank == 0:
         create_output_dir()
+        print("About to create q")
         q = pick_pairs()
     else:
         q = None
+    print("out of first if else")
 
     process_pickle_pairs(q, rank, size)

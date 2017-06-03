@@ -2,7 +2,8 @@ import glob
 import pickle
 
 # PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
-PATH = '/mnt/storage/millon-song-dataset/'
+# PATH = '/mnt/storage/millon-song-dataset/'
+PATH = 'home/rvocss/song_data/MillionSongSubset/data'
 
 def build_filelist():
     '''
