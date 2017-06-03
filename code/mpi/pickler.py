@@ -14,7 +14,8 @@ OUTPUT_DIR = 'pickles'
 
 #Change this once the remote path is known
 #PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
-PATH = '/mnt/storage/millon-song-dataset/'
+#PATH = '/mnt/storage/millon-song-dataset/'
+PATH = 'home/rvocss/song_data/MillionSongSubset/data'
 
 def build_song(fname_tuple):
     '''
