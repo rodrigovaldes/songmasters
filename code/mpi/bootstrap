@@ -4,8 +4,7 @@
 sudo apt-get install mpich
 echo internal-ip-1 >> hosts
 echo internal-ip-2 >> hosts
-sudo apt-get install python-pip
-sudo apt-get install python-dev
+
 sudo apt-get install python3-dev
 sudo apt-get install python3-pip
 
