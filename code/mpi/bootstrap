@@ -15,7 +15,6 @@ sudo python3.4 -m pip install numpy
 # Python Packages for calculation
 sudo python3.4 -m pip install multiprocessing
 sudo python3.4 -m pip install tables
-sudo python3.4 -m pip install pickle
 sudo python3.4 -m pip install mrjob
 sudo python3.4 -m pip install sklearn
 
