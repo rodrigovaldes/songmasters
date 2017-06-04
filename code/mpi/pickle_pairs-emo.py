@@ -50,23 +50,17 @@ def process_pair(pair):
     '''
     a,b  = pair['a'], pair['b']
 
-    unpickleA = pickle.loads(a)
-
+    # unpickleA = pickle.loads(a)
+    unpickleA = a 
     distances = []
 
     if b:
-        unpickleB = pickle.loads(b)
+        # unpickleB = pickle.loads(b)
+        unpickleB = b
         for idxA, songA in unpickleA.items():
             for idxB, songB in unpickleB.items():
                 idxList = [idxA, idxB]
-                dist ckleA = open(a,'rb').read()
-                    #pickleA = pickle.loads(open(a,"rb"))
-                    if b:
-                        pickleB = open(b,'rb').read()
-                        #pickleB = pickle.loads(open(b,"rb"))
-                    else:
-                        pickleB = None
-                    pair = {'a':pickleA, 'b':pickleB}0= pairwise_comparison(songA,songB)
+                dist = pairwise_comparison(songA,songB)
                 distances.append(tuple((idxList,dist)))
     else:
         keys = list(a.keys())
@@ -82,7 +76,6 @@ def process_pair(pair):
                 distances.append(tuple((idxList,dist)))
 
     return distances
-
 
 def pad_array(array,newlen):
     '''
@@ -256,4 +249,4 @@ if __name__ == '__main__':
         q = None
 
     print('About to call process_pickle_pairs')
-    process_pickle_pairs(q, rank, size)
+    # process_pickle_pairs(q, rank, size)
