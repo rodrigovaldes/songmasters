@@ -249,4 +249,4 @@ if __name__ == '__main__':
         q = None
 
     print('About to call process_pickle_pairs')
-    # process_pickle_pairs(q, rank, size)
+    process_pickle_pairs(q, rank, size)
