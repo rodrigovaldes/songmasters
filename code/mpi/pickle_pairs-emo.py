@@ -44,14 +44,13 @@ def pick_pairs():
 
     return q
 
-
 def process_pair(pair):
     '''
     '''
     a,b  = pair['a'], pair['b']
 
     # unpickleA = pickle.loads(a)
-    unpickleA = a 
+    unpickleA = a
     distances = []
 
     if b:
@@ -101,7 +100,6 @@ def pad_array(array,newlen):
         print('newlen = {}; currentlen = {}; delta = {}'.format(newlen,currentlen,delta))
         print('array.shape =',array.shape)
         print('blanks.shape =',blanks.shape)
-
 
 def pairwise_comparison(songA, songB):
     '''
@@ -162,7 +160,6 @@ def distance(songA, songB):
     except:
         print('Couldn\'t take distance for some reason')
 
-
 def write_dist(distances,n):
     '''
     '''
@@ -195,14 +192,13 @@ def create_output_dir():
         print('Created output directory:\n', output_path)
 
 
-
 def process_pickle_pairs(q, rank, size):
     '''
     '''
-    print("arrived to process_pickle_pairs")
+    print("arriving to pickle pair")
     n = 0
     if rank == 0:
-        print("Beginning rank 0")
+        print("inside rank 0")
         while not q.empty():
             for i in range(1, size):
                     a,b = q.get()
@@ -222,21 +218,19 @@ def process_pickle_pairs(q, rank, size):
 
 
     else:
-        print("NOT node 1. About to wait pair")
+        print("inside other rank non zero. Waiting for info")
         pair = comm.recv(source=0)
-        print(pair["a"])
-        print("received pair. About to cal didtamnces")
+        print("information arrived")
+        print("about to obtain distances")
         distances = process_pair(pair)
         print(distances)
-        print("finish with distances")
-    
-    print("about to gather")
-    distances = []
+        print("distances done")
+
+
     results = comm.gather(distances, root=0)
-    print(results)
-    print("after gather")
 
     if rank == 0:
+        print("I'm in the writing part")
         write_dist(results,n)
         n += 1
 
@@ -259,3 +253,5 @@ if __name__ == '__main__':
 
     print('About to call process_pickle_pairs')
     process_pickle_pairs(q, rank, size)
+
+
