@@ -166,11 +166,11 @@ def process_pickle_pairs(send_names_files, rank, size):
             pickle_to_list_2 = pickle.load(open(element[1],"rb"))
             print("Creation of pkl success")
             list_pickles.append((pickle_to_list_1, pickle_to_list_2))
-            print(len(list_pickles))
-            print(len(list_pickles[0]))
-            # print(list_pickles[0])
-            print(list_pickles[0][0].keys())
-            print(list_pickles[0][0][0].keys())
+            # print(len(list_pickles))
+            # print(len(list_pickles[0]))
+            # # print(list_pickles[0])
+            # print(list_pickles[0][0].keys())
+            # print(list_pickles[0][0][0].keys())
     else:
         list_pickles = None
     
