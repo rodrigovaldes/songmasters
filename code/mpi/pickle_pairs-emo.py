@@ -199,9 +199,10 @@ def create_output_dir():
 def process_pickle_pairs(q, rank, size):
     '''
     '''
-
+    print("arriving to pickle pair")
     n = 0
     if rank == 0:
+        print("inside rank 0")
         while not q.empty():
             for i in range(1, size):
                     a,b = q.get()
@@ -221,13 +222,19 @@ def process_pickle_pairs(q, rank, size):
 
 
     else:
+        print("inside other rank non zero. Waiting for info")
         pair = comm.recv(source=0)
+        print("information arrived")
+        print("about to obtain distances")
         distances = process_pair(pair)
+        print(distances)
+        print("distances done")
 
-
+    
     results = comm.gather(distances, root=0)
 
     if rank == 0:
+        print("I'm in the writing part")
         write_dist(results,n)
         n += 1
 
