@@ -27,6 +27,25 @@ P = '.pkl'
 D = 'distances/dist'
 T = '.tsv'
 
+
+def create_output_dir():
+    '''
+    Creates distances directory if it does not already exist.
+    Inputs:
+        None.
+    Outputs:
+        The output directory at current_path/OUTPUT_DIR.
+    Returns:
+        None.
+    '''
+
+    cur_path = os.path.split(os.path.abspath(__file__))[0]
+    output_path = os.path.join(cur_path, OUTPUT_DIR)
+    if not os.access(output_path, os.F_OK):
+        os.makedirs(output_path)
+        print('Created output directory:\n', output_path)
+
+
 def combinations_pickles():
 
     list_combinations = []
@@ -141,17 +160,25 @@ def process_pickle_pairs(send_names_files, rank, size):
     if rank == 0:
         print("inside rank 0")
         list_pickles = []
+        print(send_names_files[0])
         for element in send_names_files:
             pickle_to_list_1 = pickle.load(open(element[0],"rb"))
             pickle_to_list_2 = pickle.load(open(element[1],"rb"))
+            print("Creation of pkl success")
             list_pickles.append((pickle_to_list_1, pickle_to_list_2))
+            print(len(list_pickles))
+            print(len(list_pickles[0]))
     else:
         list_pickles = None
-
+    
+    print("out if else")
     list_pickles = comm.scatter(list_pickles, root=0)
-
+    
+     
+    print("before loop pairs")
     for pair in list_pickles:
-
+        print("about gen distmces")
+        print(len(pair))
         distances = process_pair(pair)
 
     all_distances = comm.gather(distances, root=0)
