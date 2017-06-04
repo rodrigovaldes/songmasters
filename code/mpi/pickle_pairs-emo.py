@@ -44,14 +44,13 @@ def pick_pairs():
 
     return q
 
-
 def process_pair(pair):
     '''
     '''
     a,b  = pair['a'], pair['b']
 
     # unpickleA = pickle.loads(a)
-    unpickleA = a 
+    unpickleA = a
     distances = []
 
     if b:
@@ -101,7 +100,6 @@ def pad_array(array,newlen):
         print('newlen = {}; currentlen = {}; delta = {}'.format(newlen,currentlen,delta))
         print('array.shape =',array.shape)
         print('blanks.shape =',blanks.shape)
-
 
 def pairwise_comparison(songA, songB):
     '''
@@ -162,7 +160,6 @@ def distance(songA, songB):
     except:
         print('Couldn\'t take distance for some reason')
 
-
 def write_dist(distances,n):
     '''
     '''
@@ -193,7 +190,6 @@ def create_output_dir():
     if not os.access(output_path, os.F_OK):
         os.makedirs(output_path)
         print('Created output directory:\n', output_path)
-
 
 
 def process_pickle_pairs(q, rank, size):
@@ -257,3 +253,5 @@ if __name__ == '__main__':
 
     print('About to call process_pickle_pairs')
     process_pickle_pairs(q, rank, size)
+
+
