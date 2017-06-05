@@ -292,7 +292,13 @@ if __name__ == '__main__':
 
     if rank == 0:
         print("The len of all distances is", len(all_distances))
+        print("*****************")
+        print("*****************")
+        print("        ")
         print("One element in all distances is", all_distances[0])
+        print("*****************")
+        print("*****************")
+        print("        ")
         print(all_distances)
 
 
