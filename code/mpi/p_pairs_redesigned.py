@@ -189,7 +189,8 @@ def process_pickle_pairs(send_names_files, rank, size):
     print("arriving to pickle pair")
 
     if rank == 0:
-        list_to_send = resize_list_to_send(send_names_files, size) # DEL THIS
+        # list_to_send = resize_list_to_send(send_names_files, size) # DEL THIS
+        list_to_send = np.arange(2)+ 1 
         # print("inside rank 0")
         # list_pickles = []
         # print(send_names_files[0])
@@ -220,9 +221,11 @@ def process_pickle_pairs(send_names_files, rank, size):
     #     print(len(pair))
     #     distances = process_pair(pair)
 
-    # for del_element in list_to_send: ### WHY it does not work?
+    # for del_element in list_to_send: ### WHY it does not work?    ## DEL THIS
+        # new_del = len(del_element)  ## DEL THIS
 
-    new_del = len(del_element)
+    print("Ir arrived the list_send", list_to_send)
+    new_del = 1234 
 
     # all_distances = comm.gather(distances, root=0)
 
