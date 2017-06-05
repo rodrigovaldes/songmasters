@@ -279,11 +279,10 @@ if __name__ == '__main__':
 
     print("the len of list_to_send", len(list_to_send))
 
-    # try:
-    #     print("i'm in try")
-    #     print("Element one list to send", list_to_send[0])
-    # except:
-    #     print("I am in except")
+    for pair in list_to_send:
+        print(len(pair))
+        # distances = process_pair(pair)
+
 
     # process_pickle_pairs(send_names_files, rank, size)
 
