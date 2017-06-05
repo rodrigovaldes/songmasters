@@ -256,7 +256,6 @@ def process_pickle_pairs(send_names_files, rank, size):
 
 if __name__ == '__main__':
 
-    print('Entered main')
     comm = MPI.COMM_WORLD
     rank, size = comm.Get_rank(), comm.Get_size()
 
@@ -278,7 +277,12 @@ if __name__ == '__main__':
 
     list_to_send = comm.scatter(list_to_send, root=0) ## DEL THIS
 
-    new_del = 1234 
+    print("the len of list_to_send", list_to_send)
+    try:
+        print("i'm in try")
+        print("Element one list to send", list_to_send[0])
+    except:
+        print("I am in except")
 
     # process_pickle_pairs(send_names_files, rank, size)
 
