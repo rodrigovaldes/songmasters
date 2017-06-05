@@ -151,6 +151,37 @@ def process_pair(pair):
 
     return distances
 
+def resize_list_to_send(list_to_send, num_slaves):
+
+    if len(list_to_send) == num_slaves:
+
+        rv = list_to_send
+
+    elif len(list_to_send) > num_slaves:
+
+        ideal_by_node = int(round(len(list_to_send) / num_slaves, 0))
+
+        len_last_bucket = len(list_to_send) - (ideal_by_node * (num_slaves - 1))
+
+        index = 0
+        new_list = []
+
+        for i in range(num_slaves):
+
+            if i < num_slaves - 1 :
+
+                appendable_element = list_to_send[index: index + ideal_by_node]
+
+            elif i == num_slaves - 1:
+
+                appendable_element = list_to_send[-len_last_bucket:]
+
+            new_list.append(appendable_element)
+
+        rv = new_list
+
+    return new_list
+
 
 def process_pickle_pairs(send_names_files, rank, size):
     '''
@@ -158,7 +189,7 @@ def process_pickle_pairs(send_names_files, rank, size):
     print("arriving to pickle pair")
 
     if rank == 0:
-        list_to_send = send_names_files # DEL THIS
+        list_to_send = resize_list_to_send(send_names_files, size) # DEL THIS
         # print("inside rank 0")
         # list_pickles = []
         # print(send_names_files[0])
@@ -177,6 +208,8 @@ def process_pickle_pairs(send_names_files, rank, size):
         list_to_send = None
     
     print("out if else")
+    print("This is list to send", list_to_send)
+    print("The len of list to send is", len(list_to_send))
     # list_pickles = comm.scatter(list_pickles, root=0)
     list_to_send = comm.scatter(list_to_send, root=0) ## DEL THIS
     
