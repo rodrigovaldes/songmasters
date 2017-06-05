@@ -158,33 +158,42 @@ def process_pickle_pairs(send_names_files, rank, size):
     print("arriving to pickle pair")
 
     if rank == 0:
-        print("inside rank 0")
-        list_pickles = []
-        print(send_names_files[0])
-        for element in send_names_files:
-            pickle_to_list_1 = pickle.load(open(element[0],"rb"))
-            pickle_to_list_2 = pickle.load(open(element[1],"rb"))
-            print("Creation of pkl success")
-            list_pickles.append((pickle_to_list_1, pickle_to_list_2))
+        list_to_send = send_names_files # DEL THIS
+        # print("inside rank 0")
+        # list_pickles = []
+        # print(send_names_files[0])
+        # for element in send_names_files:
+        #     pickle_to_list_1 = pickle.load(open(element[0],"rb"))
+        #     pickle_to_list_2 = pickle.load(open(element[1],"rb"))
+        #     print("Creation of pkl success")
+        #     list_pickles.append((pickle_to_list_1, pickle_to_list_2))
             # print(len(list_pickles))
             # print(len(list_pickles[0]))
             # # print(list_pickles[0])
             # print(list_pickles[0][0].keys())
             # print(list_pickles[0][0][0].keys())
     else:
-        list_pickles = None
+        # list_pickles = None
+        list_to_send = None
     
     print("out if else")
-    list_pickles = comm.scatter(list_pickles, root=0)
+    # list_pickles = comm.scatter(list_pickles, root=0)
+    list_to_send = comm.scatter(list_to_send, root=0) ## DEL THIS
     
      
-    print("before loop pairs")
-    for pair in list_pickles:
-        print("about gen distmces")
-        print(len(pair))
-        distances = process_pair(pair)
+    # print("before loop pairs")
+    # for pair in list_pickles:
+    #     print("about gen distmces")
+    #     print(len(pair))
+    #     distances = process_pair(pair)
 
-    all_distances = comm.gather(distances, root=0)
+    for del_element in list_to_send:
+        new_del = len(del_element)
+
+    # all_distances = comm.gather(distances, root=0)
+
+    all_distances = comm.gather(new_del, root=0) ## DEL THIS
+
 
     if rank == 0:
         print(all_distances)
