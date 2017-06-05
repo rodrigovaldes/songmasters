@@ -182,76 +182,23 @@ def resize_list_to_send(list_to_send, num_slaves):
 
     return new_list
 
+def write_dist_tsv(distances):
 
-def process_pickle_pairs(send_names_files, rank, size):
-    '''
-    '''
-    print("arriving to pickle pair")
+    first_step = [item for sublist in distances for item in sublist]
 
-    if rank == 0:
-        # list_to_send = resize_list_to_send(send_names_files, size) # DEL THIS
-        list_to_send = np.arange(2)+ 1 
-        # print("inside rank 0")
-        # list_pickles = []
-        # print(send_names_files[0])
-        # for element in send_names_files:
-        #     pickle_to_list_1 = pickle.load(open(element[0],"rb"))
-        #     pickle_to_list_2 = pickle.load(open(element[1],"rb"))
-        #     print("Creation of pkl success")
-        #     list_pickles.append((pickle_to_list_1, pickle_to_list_2))
-            # print(len(list_pickles))
-            # print(len(list_pickles[0]))
-            # # print(list_pickles[0])
-            # print(list_pickles[0][0].keys())
-            # print(list_pickles[0][0][0].keys())
-    else:
-        # list_pickles = None
-        list_to_send = None
-    
-    print("out if else")
-    print("This is list to send", list_to_send)
-    print("The len of list to send is", len(list_to_send))
-    # list_pickles = comm.scatter(list_pickles, root=0)
-    list_to_send = comm.scatter(list_to_send, root=0) ## DEL THIS
-    
-     
-    # print("before loop pairs")
-    # for pair in list_pickles:
-    #     print("about gen distmces")
-    #     print(len(pair))
-    #     distances = process_pair(pair)
+    for n, list_distances in enumerate(first_step):
 
-    # for del_element in list_to_send: ### WHY it does not work?    ## DEL THIS
-        # new_del = len(del_element)  ## DEL THIS
+        fname = D + str(n) + T
+        f = open(fname,'w')
 
-    print("Ir arrived the list_send", list_to_send)
-    new_del = 1234 
+        for dist_tuple in list_distances:
+            if dist_tuple:
+                idxList, dist = dist_tuple
+                if idxList[0] != idxList[1]:
+                    big_string = str(idxList) + '\t' + str(dist)
+                    f.write("%s\n" %  big_string)
 
-    # all_distances = comm.gather(distances, root=0)
-
-    all_distances = comm.gather(new_del, root=0) ## DEL THIS
-
-
-    if rank == 0:
-        print(all_distances)
-
-
-    # else:
-    #     print("inside other rank non zero. Waiting for info")
-    #     pair = comm.recv(source=0)
-    #     print("information arrived")
-    #     print("about to obtain distances")
-    #     distances = process_pair(pair)
-    #     print(distances)
-    #     print("distances done")
-
-    
-    # results = comm.gather(distances, root=0)
-
-    # if rank == 0:
-    #     print("I'm in the writing part")
-    #     write_dist(results,n)
-    #     n += 1
+        f.close()
 
 
 if __name__ == '__main__':
@@ -286,20 +233,11 @@ if __name__ == '__main__':
         list_distances.append(distances)
 
 
-    # process_pickle_pairs(send_names_files, rank, size)
-
     all_distances = comm.gather(list_distances, root=0) ## DEL THIS
 
     if rank == 0:
-        print("The len of all distances is", len(all_distances))
-        print("*****************")
-        print("*****************")
-        print("        ")
-        print("One element in all distances is", all_distances[0])
-        print("*****************")
-        print("*****************")
-        print("        ")
-        print(all_distances)
+
+        write_dist_tsv(all_distances)
 
 
 
