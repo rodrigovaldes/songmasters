@@ -16,10 +16,12 @@ NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
 OUTPUT_DIR = 'distances'
 
-PATH = '/mnt/storage/millon-song-dataset'
+#PATH = '/mnt/storage/millon-song-dataset'
+PATH = '/home/rvocss/song_data/MillionSongSubset/data'
 
 #M = PATH + '/pickles/music'
-M = 'music'
+#M = 'music'
+M = '/home/rvocss/songmasters/code/mpi/pickles/music'
 
 P = '.pkl'
 D = 'distances/dist'
@@ -42,18 +44,18 @@ def pick_pairs():
 
     return q
 
-
 def process_pair(pair):
     '''
     '''
     a,b  = pair['a'], pair['b']
 
-    unpickleA = pickle.loads(a)
-
+    # unpickleA = pickle.loads(a)
+    unpickleA = a
     distances = []
 
     if b:
-        unpickleB = pickle.loads(b)
+        # unpickleB = pickle.loads(b)
+        unpickleB = b
         for idxA, songA in unpickleA.items():
             for idxB, songB in unpickleB.items():
                 idxList = [idxA, idxB]
@@ -73,7 +75,6 @@ def process_pair(pair):
                 distances.append(tuple((idxList,dist)))
 
     return distances
-
 
 def pad_array(array,newlen):
     '''
@@ -99,7 +100,6 @@ def pad_array(array,newlen):
         print('newlen = {}; currentlen = {}; delta = {}'.format(newlen,currentlen,delta))
         print('array.shape =',array.shape)
         print('blanks.shape =',blanks.shape)
-
 
 def pairwise_comparison(songA, songB):
     '''
@@ -160,7 +160,6 @@ def distance(songA, songB):
     except:
         print('Couldn\'t take distance for some reason')
 
-
 def write_dist(distances,n):
     '''
     '''
@@ -193,22 +192,22 @@ def create_output_dir():
         print('Created output directory:\n', output_path)
 
 
-
 def process_pickle_pairs(q, rank, size):
     '''
     '''
-
+    print("arriving to pickle pair")
     n = 0
     if rank == 0:
+        print("inside rank 0")
         while not q.empty():
             for i in range(1, size):
                     a,b = q.get()
                     print('Loading pickles')
-                    pickleA = open(a,'rb').read()
-                    #pickleA = pickle.loads(open(a,"rb"))
+                    #pickleA = open(a,'rb').read()
+                    pickleA = pickle.load(open(a,"rb"))
                     if b:
-                        pickleB = open(b,'rb').read()
-                        #pickleB = pickle.loads(open(b,"rb"))
+                        #pickleB = open(b,'rb').read()
+                        pickleB = pickle.load(open(b,"rb"))
                     else:
                         pickleB = None
                     pair = {'a':pickleA, 'b':pickleB}
@@ -219,13 +218,19 @@ def process_pickle_pairs(q, rank, size):
 
 
     else:
+        print("inside other rank non zero. Waiting for info")
         pair = comm.recv(source=0)
+        print("information arrived")
+        print("about to obtain distances")
         distances = process_pair(pair)
+        print(distances)
+        print("distances done")
 
-
+    
     results = comm.gather(distances, root=0)
 
     if rank == 0:
+        print("I'm in the writing part")
         write_dist(results,n)
         n += 1
 
@@ -242,8 +247,11 @@ if __name__ == '__main__':
         create_output_dir()
         print('Making queue')
         q = pick_pairs()
+        print("finish with the q")
     else:
         q = None
 
     print('About to call process_pickle_pairs')
     process_pickle_pairs(q, rank, size)
+
+
