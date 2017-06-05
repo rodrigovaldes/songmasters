@@ -291,6 +291,8 @@ if __name__ == '__main__':
     all_distances = comm.gather(list_distances, root=0) ## DEL THIS
 
     if rank == 0:
+        print("The len of all distances is", len(all_distances))
+        print("One element in all distances is", all_distances[0])
         print(all_distances)
 
 
