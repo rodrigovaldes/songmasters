@@ -279,14 +279,16 @@ if __name__ == '__main__':
 
     print("the len of list_to_send", len(list_to_send))
 
+    list_distances = []
     for pair in list_to_send:
         print(len(pair))
-        # distances = process_pair(pair)
+        distances = process_pair(pair)
+        list_distances.append(distances)
 
 
     # process_pickle_pairs(send_names_files, rank, size)
 
-    all_distances = comm.gather(new_del, root=0) ## DEL THIS
+    all_distances = comm.gather(list_distances, root=0) ## DEL THIS
 
     if rank == 0:
         print(all_distances)
