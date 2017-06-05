@@ -263,22 +263,23 @@ if __name__ == '__main__':
     print('Rank = {}; size = {}'.format(rank,size))
 
     if rank == 0:
-        # create_output_dir()
-        print('Make list of name files to distribute')
-        # send_names_files = combinations_pickles()
-        print("finish with the names_files_list")
-        list_to_send = np.arange(2)+ 1 
+        create_output_dir()
+        send_names_files = combinations_pickles()
+        
+        list_pickles = []
+        for element in send_names_files:
+            pickle_to_list_1 = pickle.load(open(element[0],"rb"))
+            pickle_to_list_2 = pickle.load(open(element[1],"rb"))
+            list_pickles.append((pickle_to_list_1, pickle_to_list_2))
+        list_to_send = resize_list_to_send(list_pickles, size) # DEL THIS
+
     else:
-        # send_names_files = None
         list_to_send = None
 
     list_to_send = comm.scatter(list_to_send, root=0) ## DEL THIS
 
-    print("Ir arrived the list_send", list_to_send)
-
     new_del = 1234 
 
-    # print('About to call process_pickle_pairs')
     # process_pickle_pairs(send_names_files, rank, size)
 
     all_distances = comm.gather(new_del, root=0) ## DEL THIS
