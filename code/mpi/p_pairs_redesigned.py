@@ -220,8 +220,9 @@ def process_pickle_pairs(send_names_files, rank, size):
     #     print(len(pair))
     #     distances = process_pair(pair)
 
-    for del_element in list_to_send:
-        new_del = len(del_element)
+    # for del_element in list_to_send: ### WHY it does not work?
+
+    new_del = len(del_element)
 
     # all_distances = comm.gather(distances, root=0)
 
