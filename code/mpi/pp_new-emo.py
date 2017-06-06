@@ -232,6 +232,8 @@ def process_pickle_pairs(q, rank, size):
     '''
     '''
 
+    i = 0
+
     while not q.empty():
         batch = []
         for i in range(size):
@@ -255,10 +257,11 @@ def process_pickle_pairs(q, rank, size):
         distances = comm.gather(dist, root=0)
 
         if rank == 0:
-            write_dist(distances)
+            write_dist(distances,i)
 
+        i += 1
 
-def write_dist(distances):
+def write_dist(distances,i):
     '''
     '''
     print('Writing to all_distances.tsv')
@@ -276,8 +279,9 @@ def write_dist(distances):
                     print('\t\tJust wrote')
     else:
         print('distances is not valid')
+    print('ABOUT TO CLOSE')
     f.close()
-
+    print('CLOSED', i)
 
 if __name__ == '__main__':
 
