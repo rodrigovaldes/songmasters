@@ -3,9 +3,7 @@ from mrjob.job import MRJob
 
 class LeastSimilar(MRJob):
     '''
-    This is based on taking distances between songs with cosine similarity,
-    which should be bounded between [0,1], with values closer to 0 indicating
-    less similarity and values closer to 1 indicating more similarity.
+    This is based on taking distances between songs with cosine similarity.
     '''
 
     def mapper(self, _, line):
