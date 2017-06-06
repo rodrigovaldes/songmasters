@@ -2,6 +2,10 @@
 # File with implementations to create .sh files to send and receive information
 # to the nodes
 
+# The master node is named "Mozart."
+
+# All the other nodes are named "Beethoven-{}".format(id).
+
 # List internal IDs
 mozart_int = "XXX.XXX.XXX.XX"
 internal_ids = ["XX.XXX.X.7",
