@@ -10,7 +10,7 @@ from sklearn.metrics.pairwise import cosine_similarity as cs
 
 
 #Change as needed
-NUM_PKLS = 12
+NUM_PKLS = 18
 
 NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
@@ -232,15 +232,17 @@ def process_pickle_pairs(q, rank, size):
     '''
     '''
 
-    i = 0
+    i = 1
 
     while not q.empty():
+        print('PPP:  Top of while-loop', q.qsize())
         batch = []
         for i in range(size):
+            print('\tPPP:  Inside for-loop')
             if rank == 0:
                 if not q.empty():
                     a,b = q.get()
-                    print('Opening pickles')
+                    #print('Opening pickles')
                     pickleA = open(a,'rb').read()
                     #pickleA = pickle.loads(open(a,"rb"))
                     if b:
@@ -252,34 +254,47 @@ def process_pickle_pairs(q, rank, size):
 
                     batch.append(pair)
 
+        print('\t\t\tSCATTERING')
         pair = comm.scatter(batch, root=0)
         dist = process_pair(pair)
+        print('\t\t\tGATHERING')
         distances = comm.gather(dist, root=0)
 
         if rank == 0:
             write_dist(distances,i)
 
         i += 1
+        print('JUST FINISHED WRITING')
+        print(q.qsize())
+
+        if q.empty():
+            print('\t\t\t\tBREAKING')
+            break
+        else:
+            print('\t\t\t\tNOT BREAKING; q.qsize() = ', q.qsize())
+
+    print('about to return none')
+    return None
 
 def write_dist(distances,i):
     '''
     '''
-    print('Writing to all_distances.tsv')
+    #print('Writing to all_distances.tsv')
     f = open(OUTFILE,'a')
     if distances:
         for dist_list in distances:
-            print('In outer for-loop')
+            #print('In outer for-loop')
             for dist_tuple in  dist_list:
-                print('\tIn inner for-loop')
+                #print('\tIn inner for-loop')
                 if dist_tuple:
-                    print('\t\tAbout to write')
+                    #print('\t\tAbout to write')
                     idxList, dist = dist_tuple
                     big_string = str(idxList) + '\t' + str(dist)
                     f.write('%s\n' %  big_string)
-                    print('\t\tJust wrote')
+                    #print('\t\tJust wrote')
     else:
         print('distances is not valid')
-    print('ABOUT TO CLOSE')
+    #print('ABOUT TO CLOSE')
     f.close()
     print('CLOSED', i)
 
@@ -298,3 +313,4 @@ if __name__ == '__main__':
     q = pick_pairs()
 
     process_pickle_pairs(q, rank, size)
+    print('SHOULD BE DONE')
