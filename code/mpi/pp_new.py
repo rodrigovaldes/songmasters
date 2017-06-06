@@ -182,6 +182,7 @@ def resize_list_to_send(list_to_send, num_slaves):
 
     return new_list
 
+
 def write_dist_tsv(distances):
 
     first_step = [item for sublist in distances for item in sublist]
@@ -209,7 +210,7 @@ if __name__ == '__main__':
     print('Rank = {}; size = {}'.format(rank,size))
 
     if rank == 0:
-        create_output_dir()
+        
         send_names_files = combinations_pickles()
         
         list_pickles = []
@@ -236,7 +237,7 @@ if __name__ == '__main__':
     all_distances = comm.gather(list_distances, root=0) ## DEL THIS
 
     if rank == 0:
-
+        create_output_dir()
         write_dist_tsv(all_distances)
 
 
