@@ -5,16 +5,16 @@ import numpy as np
 import multiprocessing as mp
 
 #Adjust as needed; MAX_SONGS % NUM_PKLS should equal 0
-MAX_SONGS = 10
-NUM_PKLS = 2
+MAX_SONGS = 10000
+NUM_PKLS = 80
 
 SONGS_PER_PKL = int(MAX_SONGS / NUM_PKLS)
 
 OUTPUT_DIR = 'pickles'
 
 #Change this once the remote path is known
-#PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
-PATH = '/mnt/storage/millon-song-dataset/'
+PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
+#PATH = '/mnt/storage/millon-song-dataset/'
 #PATH = 'home/rvocss/song_data/MillionSongSubset/data'
 
 def build_song(fname_tuple):
@@ -113,6 +113,9 @@ def create_IDX_list():
     for i in range(NUM_PKLS):
         start = i * SONGS_PER_PKL
         end = (i + 1) * SONGS_PER_PKL
+        remainder = MAX_SONGS - end
+        if remainder < SONGS_PER_PKL:
+            end = MAX_SONGS
         IDX_list.append(tuple((i,start,end)))
 
     return IDX_list
@@ -132,7 +135,7 @@ if __name__ == '__main__':
 
     print('Pickling pickles')
     #Update for production environment
-    pool = mp.Pool(8)
+    pool = mp.Pool(4)
     pool.map(pickle_pickles, IDX_list)
     pickle.dump(IDX_list, open('IDX_list.pkl', 'wb'))
     print('Pickles pickled')
