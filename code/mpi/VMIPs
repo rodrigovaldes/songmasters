@@ -1,0 +1,47 @@
+#Assorted stuff to paste into terminals
+
+
+
+# MASTER 104.198.254.24     10.128.0.2
+# SLAVE1 104.154.16.87      10.128.0.3
+# SLAVE2 104.154.236.149    10.128.0.4
+# SLAVE3 35.184.105.134     10.128.0.5
+# SLAVE4 104.197.159.197    10.128.0.6
+# SLAVE5 104.197.81.74      10.128.0.7
+
+#TO THE MASTER
+echo 10.128.0.2 >> hosts
+echo 10.128.0.3 >> hosts
+echo 10.128.0.4 >> hosts
+echo 10.128.0.5 >> hosts
+echo 10.128.0.6 >> hosts
+echo 10.128.0.7 >> hosts
+
+#TO SLAVE1
+echo 10.128.0.2 >> hosts
+echo 10.128.0.3 >> hosts
+
+# TO SLAVE2
+echo 10.128.0.2 >> hosts
+echo 10.128.0.4 >> hosts
+
+# TO SLAVE3
+echo 10.128.0.2 >> hosts
+echo 10.128.0.5 >> hosts
+
+#TO SLAVE4
+echo 10.128.0.2 >> hosts
+echo 10.128.0.6 >> hosts
+
+# TO SLAVE5
+echo 10.128.0.2 >> hosts
+echo 10.128.0.7 >> hosts
+
+
+
+scp -i ~/.ssh/google-cloud-cs123 ~/.ssh/google-cloud-cs123 emo@104.198.254.24:~/.ssh/id_rsa
+scp -i ~/.ssh/google-cloud-cs123 ~/.ssh/google-cloud-cs123 emo@104.154.16.87:~/.ssh/id_rsa
+scp -i ~/.ssh/google-cloud-cs123 ~/.ssh/google-cloud-cs123 emo@104.154.236.149:~/.ssh/id_rsa
+scp -i ~/.ssh/google-cloud-cs123 ~/.ssh/google-cloud-cs123 emo@35.184.105.134:~/.ssh/id_rsa
+scp -i ~/.ssh/google-cloud-cs123 ~/.ssh/google-cloud-cs123 emo@104.197.159.197:~/.ssh/id_rsa
+scp -i ~/.ssh/google-cloud-cs123 ~/.ssh/google-cloud-cs123 emo@104.197.81.74:~/.ssh/id_rsa
