@@ -25,8 +25,10 @@ one_part = comm.scatter(create_mode, root=0)
 
 one_part += 3
 
-all_this = comm.gather(one, root=0)
+all_this = comm.gather(one_part, root=0)
 
 if rank == 0:
 	print(all_this)
 
+
+# mpiexec -f hosts -n 2 python ~/songmasters/code/auxiliary_code/testing_mpi.py
