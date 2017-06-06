@@ -7,6 +7,7 @@ from scipy.misc import comb
 from operator import itemgetter
 from itertools import combinations as combo
 from sklearn.metrics.pairwise import cosine_similarity as cs
+import time, sys
 
 
 #Change as needed
@@ -298,3 +299,12 @@ if __name__ == '__main__':
     q = pick_pairs()
 
     process_pickle_pairs(q, rank, size)
+    print("This should end. I'm tired")
+    time.sleep(1)
+    print("... about now.")
+    time.sleep(1)
+    print("Yes, we are bad kids. We do not want to work anymore")
+    print("But don't worry. We finished the job!")
+    time.sleep(1)
+    print("bye")
+    sys.exit(0)
