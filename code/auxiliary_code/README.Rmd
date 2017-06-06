@@ -1,0 +1,9 @@
+---
+output:
+    github_document:
+      toc: true
+---
+
+# Auxiliary Code
+
+Files which helped us to undertand the implementation of MPI in Goolge Cloud. Those are not fundamental for the project by itself.
