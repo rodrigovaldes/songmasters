@@ -5,7 +5,7 @@ import numpy as np
 import multiprocessing as mp
 
 #Adjust as needed; MAX_SONGS % NUM_PKLS should equal 0
-MAX_SONGS = 10
+MAX_SONGS = 100#00
 NUM_PKLS = 2
 
 SONGS_PER_PKL = int(MAX_SONGS / NUM_PKLS)
@@ -13,8 +13,8 @@ SONGS_PER_PKL = int(MAX_SONGS / NUM_PKLS)
 OUTPUT_DIR = 'pickles'
 
 #Change this once the remote path is known
-#PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
-PATH = '/mnt/storage/millon-song-dataset/'
+PATH = '/Users/erin/Desktop/MillionSongDataset/MillionSongSubset/data/'
+#PATH = '/mnt/storage/millon-song-dataset/'
 #PATH = 'home/rvocss/song_data/MillionSongSubset/data'
 
 def build_song(fname_tuple):

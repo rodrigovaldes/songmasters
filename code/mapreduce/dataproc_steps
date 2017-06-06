@@ -1,0 +1,8 @@
+STEPS
+
+X   -Download sample to VM
+X   -Install Anaconda
+X   -Clone github repo on VM
+X   -Update PATH variable in pickle_dicto.py
+    -Pickle subset into one pickle
+    -Run Dataproc on pairs_IDX_trimmed
