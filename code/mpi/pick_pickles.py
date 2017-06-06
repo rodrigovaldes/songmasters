@@ -3,7 +3,7 @@ from scipy.misc import comb
 
 NODES = 21#6
 
-UPPER = 100
+UPPER = 200
 LOWER = 2
 
 def diagnostic(pickles, NODES):

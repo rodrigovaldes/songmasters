@@ -116,7 +116,6 @@ def create_IDX_list():
         remainder = MAX_SONGS - end
         if remainder < SONGS_PER_PKL:
             end = MAX_SONGS
-            print(end)
         IDX_list.append(tuple((i,start,end)))
 
     return IDX_list
@@ -134,9 +133,9 @@ if __name__ == '__main__':
     IDX_list = create_IDX_list()
     print('Built IDX list')
 
-    #print('Pickling pickles')
+    print('Pickling pickles')
     #Update for production environment
-    #pool = mp.Pool(4)
-    #pool.map(pickle_pickles, IDX_list)
-    #pickle.dump(IDX_list, open('IDX_list.pkl', 'wb'))
-    #print('Pickles pickled')
+    pool = mp.Pool(4)
+    pool.map(pickle_pickles, IDX_list)
+    pickle.dump(IDX_list, open('IDX_list.pkl', 'wb'))
+    print('Pickles pickled')
