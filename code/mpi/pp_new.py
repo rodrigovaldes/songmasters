@@ -18,6 +18,8 @@ OUTPUT_DIR = 'distances'
 
 #PATH = '/mnt/storage/millon-song-dataset'
 PATH = '/home/rvocss/song_data/MillionSongSubset/data'
+PATH_SAVE = '/home/rvocss'
+
 
 #M = PATH + '/pickles/music'
 #M = 'music'
@@ -237,6 +239,7 @@ if __name__ == '__main__':
     all_distances = comm.gather(list_distances, root=0) ## DEL THIS
 
     if rank == 0:
+        os.chdir(PATH_SAVE)
         create_output_dir()
         write_dist_tsv(all_distances)
 
