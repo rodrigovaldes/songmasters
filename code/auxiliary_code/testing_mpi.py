@@ -26,7 +26,7 @@ for i in range(10):
 
     one_part = comm.scatter(create_mode, root=0) 
 
-    one_part += 3
+    one_part += i
 
     all_this = comm.gather(one_part, root=0)
 
