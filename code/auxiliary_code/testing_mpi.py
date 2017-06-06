@@ -9,12 +9,14 @@ from itertools import combinations as combo
 from sklearn.metrics.pairwise import cosine_similarity as cs
 
 compilation = []
-for i in range(10):
+for i in range(3):
 
     comm = MPI.COMM_WORLD
     rank, size = comm.Get_rank(), comm.Get_size()
+    name = MPI.Get_processor_name()
 
-    print('Rank = {}; size = {}'.format(rank,size))
+    # print('Rank = {}; size = {}'.format(rank,size))
+    print("Hello from rank {} of {} on {}".format(rank, size, name))
 
     if rank == 0:
 
