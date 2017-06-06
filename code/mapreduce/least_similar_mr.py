@@ -28,8 +28,8 @@ class LeastSimilar(MRJob):
 
         distance = list(dist)[0]
 
-        if abs(distance) < self.distance:
-            self.distance = abs(distance)
+        if distance < self.distance:
+            self.distance = distance
             self.pairIDX = pair
 
     def reducer_final(self):
