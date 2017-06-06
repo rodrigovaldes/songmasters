@@ -42,7 +42,10 @@ def create_output_dir():
     '''
 
     cur_path = os.path.split(os.path.abspath(__file__))[0]
-    output_path = os.path.join(cur_path, OUTPUT_DIR)
+    list_path = cur_path.split("/")
+    get_first_elements = list_path[:3]
+    new_dir = "/".join(get_first_elements) + "/"
+    output_path = os.path.join(new_dir, OUTPUT_DIR)
     if not os.access(output_path, os.F_OK):
         os.makedirs(output_path)
         print('Created output directory:\n', output_path)
@@ -239,7 +242,6 @@ if __name__ == '__main__':
     all_distances = comm.gather(list_distances, root=0) ## DEL THIS
 
     if rank == 0:
-        os.chdir(PATH_SAVE)
         create_output_dir()
         write_dist_tsv(all_distances)
 
