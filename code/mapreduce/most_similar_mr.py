@@ -3,9 +3,7 @@ from mrjob.job import MRJob
 
 class MostSimilar(MRJob):
     '''
-    This is based on taking distances between songs with distance correlation,
-    which should be bounded between [0,1], with values closer to 0 indicating
-    greater independence and values closer to 1 indicating less independence.
+    This is based on taking distances between songs with cosine similarity.
     '''
 
     def mapper(self, _, line):
@@ -28,8 +26,8 @@ class MostSimilar(MRJob):
 
         distance = list(dist)[0]
 
-        if abs(distance) > self.distance:
-            self.distance = abs(distance)
+        if distance > self.distance:
+            self.distance = distance
             self.pairIDX = pair
 
     def reducer_final(self):
