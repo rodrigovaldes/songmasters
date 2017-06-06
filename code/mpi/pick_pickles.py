@@ -1,10 +1,10 @@
 from scipy.misc import comb
 
 
-NODES = 6
+NODES = 21#6
 
 UPPER = 100
-LOWER = NODES
+LOWER = 2
 
 def diagnostic(pickles, NODES):
     com = comb(pickles,2)
