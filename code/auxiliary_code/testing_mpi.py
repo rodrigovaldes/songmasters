@@ -8,27 +8,34 @@ from operator import itemgetter
 from itertools import combinations as combo
 from sklearn.metrics.pairwise import cosine_similarity as cs
 
-comm = MPI.COMM_WORLD
-rank, size = comm.Get_rank(), comm.Get_size()
+compilation = []
+for i in range(10):
 
-print('Rank = {}; size = {}'.format(rank,size))
+    comm = MPI.COMM_WORLD
+    rank, size = comm.Get_rank(), comm.Get_size()
 
-if rank == 0:
+    print('Rank = {}; size = {}'.format(rank,size))
 
-	create_mode = np.arange(size)
+    if rank == 0:
 
-else:
+        create_mode = np.arange(size)
 
-    create_mode = None
+    else:
 
-one_part = comm.scatter(create_mode, root=0) 
+        create_mode = None
 
-one_part += 3
+    one_part = comm.scatter(create_mode, root=0) 
 
-all_this = comm.gather(one_part, root=0)
+    one_part += 3
 
-if rank == 0:
-	print(all_this)
+    all_this = comm.gather(one_part, root=0)
+
+    if rank == 0:
+        print(all_this)
+        compilation.append(all_this)
+
+print("Complete compilation", compilation)
+
 
 
 # mpiexec -f hosts -n 2 python ~/songmasters/code/auxiliary_code/testing_mpi.py
