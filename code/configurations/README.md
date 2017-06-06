@@ -1,8 +1,3 @@
----
-output:
-    github_document:
-      toc: true
----
 
 # Configurations
 
