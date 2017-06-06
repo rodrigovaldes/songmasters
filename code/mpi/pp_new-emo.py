@@ -1,5 +1,6 @@
 import os
 import pickle
+import time, sys
 import numpy as np
 from mpi4py import MPI
 from queue import Queue
@@ -10,49 +11,17 @@ from sklearn.metrics.pairwise import cosine_similarity as cs
 
 
 #Change as needed
-NUM_PKLS = 18
+NUM_PKLS = 8#15
+
+NUM_NODES = 6
 
 NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
 OUTFILE = 'all_distances.tsv'
-OUTPUT_DIR = 'distances'
-
-#PATH = '/mnt/storage/millon-song-dataset'
-PATH = '/home/rvocss/song_data/MillionSongSubset/data'
-PATH_SAVE = '/home/emo/distances'
-
-
-#M = PATH + '/pickles/music'
-#M = 'music'
-#M = '/home/rvocss/songmasters/code/mpi/pickles/music'
 
 M = 'pickles/music'
 
 P = '.pkl'
-D = 'distances/dist'
-T = '.tsv'
-
-
-def create_output_dir():
-    '''
-    Creates distances directory if it does not already exist.
-    Inputs:
-        None.
-    Outputs:
-        The output directory at current_path/OUTPUT_DIR.
-    Returns:
-        None.
-    '''
-
-    cur_path = os.path.split(os.path.abspath(__file__))[0]
-    list_path = cur_path.split("/")
-    get_first_elements = list_path[:3]
-    new_dir = "/".join(get_first_elements) + "/"
-    output_path = os.path.join(new_dir, OUTPUT_DIR)
-    if not os.access(output_path, os.F_OK):
-        os.makedirs(output_path)
-        print('Created output directory:\n', output_path)
-
 
 def pick_pairs():
     '''
@@ -177,140 +146,71 @@ def process_pair(pair):
 
     return distances
 
-def resize_list_to_send(list_to_send, num_slaves):
-
-    if len(list_to_send) == num_slaves:
-
-        rv = list_to_send
-
-    elif len(list_to_send) > num_slaves:
-
-        ideal_by_node = int(round(len(list_to_send) / num_slaves, 0))
-
-        len_last_bucket = len(list_to_send) - (ideal_by_node * (num_slaves - 1))
-
-        index = 0
-        new_list = []
-
-        for i in range(num_slaves):
-
-            if i < num_slaves - 1 :
-
-                appendable_element = list_to_send[index: index + ideal_by_node]
-
-            elif i == num_slaves - 1:
-
-                appendable_element = list_to_send[-len_last_bucket:]
-
-            new_list.append(appendable_element)
-
-        rv = new_list
-
-    return new_list
-
-
-def write_dist_tsv(distances):
-
-    first_step = [item for sublist in distances for item in sublist]
-
-    for n, list_distances in enumerate(first_step):
-
-        fname = D + str(n) + T
-        f = open(fname,'w')
-
-        for dist_tuple in list_distances:
-            if dist_tuple:
-                idxList, dist = dist_tuple
-                if idxList[0] != idxList[1]:
-                    big_string = str(idxList) + '\t' + str(dist)
-                    f.write("%s\n" %  big_string)
-
-        f.close()
-
 
 def process_pickle_pairs(q, rank, size):
     '''
     '''
 
-    i = 1
-
     while not q.empty():
-        print('PPP:  Top of while-loop', q.qsize())
         batch = []
         for i in range(size):
-            print('\tPPP:  Inside for-loop')
             if rank == 0:
                 if not q.empty():
                     a,b = q.get()
-                    #print('Opening pickles')
                     pickleA = open(a,'rb').read()
-                    #pickleA = pickle.loads(open(a,"rb"))
                     if b:
                         pickleB = open(b,'rb').read()
-                        #pickleB = pickle.loads(open(b,"rb"))
                     else:
                         pickleB = None
                     pair = {'a':pickleA, 'b':pickleB}
 
                     batch.append(pair)
 
-        print('\t\t\tSCATTERING')
         pair = comm.scatter(batch, root=0)
         dist = process_pair(pair)
-        print('\t\t\tGATHERING')
         distances = comm.gather(dist, root=0)
 
         if rank == 0:
-            write_dist(distances,i)
+            write_dist(distances)
 
-        i += 1
-        print('JUST FINISHED WRITING')
-        print(q.qsize())
-
-        if q.empty():
-            print('\t\t\t\tBREAKING')
-            break
-        else:
-            print('\t\t\t\tNOT BREAKING; q.qsize() = ', q.qsize())
-
-    print('about to return none')
-    return None
-
-def write_dist(distances,i):
+def write_dist(distances):
     '''
     '''
-    #print('Writing to all_distances.tsv')
     f = open(OUTFILE,'a')
     if distances:
         for dist_list in distances:
-            #print('In outer for-loop')
             for dist_tuple in  dist_list:
-                #print('\tIn inner for-loop')
                 if dist_tuple:
-                    #print('\t\tAbout to write')
                     idxList, dist = dist_tuple
                     big_string = str(idxList) + '\t' + str(dist)
                     f.write('%s\n' %  big_string)
-                    #print('\t\tJust wrote')
     else:
         print('distances is not valid')
-    #print('ABOUT TO CLOSE')
     f.close()
-    print('CLOSED', i)
 
 if __name__ == '__main__':
 
-    create_output_dir()
+    if (NUM_PAIRS % NUM_NODES) == 0:
 
-    output = open(OUTFILE, 'w')
-    output.close()
+        output = open(OUTFILE, 'w')
+        output.close()
 
-    comm = MPI.COMM_WORLD
-    rank, size = comm.Get_rank(), comm.Get_size()
+        comm = MPI.COMM_WORLD
+        rank, size = comm.Get_rank(), comm.Get_size()
 
-    print('Rank = {}; size = {}'.format(rank,size))
+        print('Rank = {}; size = {}'.format(rank,size))
 
-    q = pick_pairs()
+        q = pick_pairs()
 
-    process_pickle_pairs(q, rank, size)
-    print('SHOULD BE DONE')
+        process_pickle_pairs(q, rank, size)
+
+        print("I'm tired.  It's almost 4:00 a.m. and the birds are singing.  This should end...")
+        time.sleep(1)
+        print("... about now.")
+        time.sleep(1)
+        print("Yes, we are bad kids. We do not want to work anymore.")
+        print("But don't worry. We finished the job!")
+        time.sleep(1)
+        print("Bye!")
+        print('\n\nP.S.  This hangs and we don\'t know why.  Please hit ctrl-z to exit.')
+        sys.exit(0)

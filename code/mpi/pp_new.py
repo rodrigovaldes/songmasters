@@ -10,7 +10,7 @@ from sklearn.metrics.pairwise import cosine_similarity as cs
 
 
 #Change as needed
-NUM_PKLS = 2#10
+NUM_PKLS = 20
 
 NUM_PAIRS = int(comb(NUM_PKLS,2)) + NUM_PKLS
 
@@ -18,12 +18,14 @@ OUTPUT_DIR = 'distances'
 
 #PATH = '/mnt/storage/millon-song-dataset'
 PATH = '/home/rvocss/song_data/MillionSongSubset/data'
-PATH_SAVE = '/home/rvocss'
+PATH_SAVE = '/home/emo/distances'
 
 
 #M = PATH + '/pickles/music'
 #M = 'music'
-M = '/home/rvocss/songmasters/code/mpi/pickles/music'
+#M = '/home/rvocss/songmasters/code/mpi/pickles/music'
+
+M = 'pickles/music'
 
 P = '.pkl'
 D = 'distances/dist'
@@ -215,9 +217,9 @@ if __name__ == '__main__':
     print('Rank = {}; size = {}'.format(rank,size))
 
     if rank == 0:
-        
+
         send_names_files = combinations_pickles()
-        
+
         list_pickles = []
         for element in send_names_files:
             pickle_to_list_1 = pickle.load(open(element[0],"rb"))
@@ -244,8 +246,3 @@ if __name__ == '__main__':
     if rank == 0:
         create_output_dir()
         write_dist_tsv(all_distances)
-
-
-
-
-
